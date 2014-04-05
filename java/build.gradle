@@ -1,5 +1,33 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main.compileClasspath += configurations.provided
+    test.compileClasspath += configurations.provided
+    test.runtimeClasspath += configurations.provided
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
 
 dependencies {
+    provided 'org.json:json:20090211'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.11'
+
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository url: "file://$System.env.HOME/.m2/repository"
+        pom.version = '0.0.1'
+        pom.groupId = 'jp.fkmsoft.libs'
+        pom.artifactId = 'KiiLib-Java'
+    }
 }
