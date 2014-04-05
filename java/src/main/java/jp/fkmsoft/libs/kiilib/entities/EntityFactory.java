@@ -6,10 +6,11 @@ package jp.fkmsoft.libs.kiilib.entities;
 public interface EntityFactory<
         USER extends KiiUser,
         GROUP extends KiiGroup<USER>,
-        OBJECT extends KiiObject> {
+        BUCKET extends KiiBucket,
+        OBJECT extends KiiObject<BUCKET>> {
     KiiUserFactory<USER> getKiiUserFactory();
 
     KiiGroupFactory<GROUP, USER> getKiiGroupFactory();
 
-    KiiObjectFactory<OBJECT> getKiiObjectFactory();
+    KiiObjectFactory<BUCKET, OBJECT> getKiiObjectFactory();
 }

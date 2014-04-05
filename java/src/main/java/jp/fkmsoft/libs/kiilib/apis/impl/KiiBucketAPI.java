@@ -4,6 +4,7 @@ import jp.fkmsoft.libs.kiilib.apis.BucketAPI;
 import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiObjectFactory;
 import jp.fkmsoft.libs.kiilib.entities.QueryParams;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
@@ -11,28 +12,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiBucketAPI implements BucketAPI {
+class KiiBucketAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> implements BucketAPI<BUCKET, OBJECT> {
 
     private final KiiAppAPI api;
+    private final KiiObjectFactory<BUCKET, OBJECT> mObjectFactory;
     
-    KiiBucketAPI(KiiAppAPI api) {
+    KiiBucketAPI(KiiAppAPI api, KiiObjectFactory<BUCKET, OBJECT> objectFactory) {
         this.api = api;
+        this.mObjectFactory = objectFactory;
     }
 
     @Override
-    public void query(final KiiBucket bucket, QueryParams condition, final QueryCallback callback) {
+    public void query(final BUCKET bucket, QueryParams condition, final QueryCallback<BUCKET, OBJECT> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + bucket.getResourcePath() + "/query";
         
         api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken, 
-                "application/vnd.kii.QueryRequest+json", null, condition.toJson(), new KiiResponseHandler<QueryCallback>(callback) {
+                "application/vnd.kii.QueryRequest+json", null, condition.toJson(), new KiiResponseHandler<QueryCallback<BUCKET, OBJECT>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, QueryCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, QueryCallback<BUCKET, OBJECT> callback) {
                 try {
                     JSONArray array = response.getJSONArray("results");
                     
-                    KiiObjectQueryResult result = new KiiObjectQueryResult(array.length());
+                    KiiObjectQueryResult<BUCKET, OBJECT> result = new KiiObjectQueryResult<BUCKET, OBJECT>(array.length());
                     for (int i = 0 ; i < array.length() ; ++i) {
-                        result.add(new KiiObject(bucket, array.getJSONObject(i)));
+                        result.add(mObjectFactory.create(bucket, array.getJSONObject(i)));
                     }
                     
                     callback.onSuccess(result);
@@ -44,13 +47,13 @@ class KiiBucketAPI implements BucketAPI {
     }
 
     @Override
-    public void delete(final KiiBucket bucket, BucketCallback callback) {
+    public void delete(final BUCKET bucket, BucketCallback<BUCKET> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + bucket.getResourcePath();
         
         api.getHttpClient().sendJsonRequest(Method.DELETE, url, api.accessToken, 
-                null, null, null, new KiiResponseHandler<BucketCallback>(callback) {
+                null, null, null, new KiiResponseHandler<BucketCallback<BUCKET>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, BucketCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, BucketCallback<BUCKET> callback) {
                 callback.onSuccess(bucket);
             }
         });

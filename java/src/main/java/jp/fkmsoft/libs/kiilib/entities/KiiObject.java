@@ -7,7 +7,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class KiiObject extends JSONObject implements AccessControllable {
+public class KiiObject<BUCKET extends KiiBucket> extends JSONObject implements AccessControllable {
     private static final String FIELD_ID = "_id";
     private static final String FIELD_VERSION = "_version";
     private static final String FIELD_MODIFIED = "_modified";
@@ -16,23 +16,23 @@ public class KiiObject extends JSONObject implements AccessControllable {
     private static final String FIELD_OBJECT_ID = "objectID";
     
     
-    private final KiiBucket bucket;
+    private final BUCKET bucket;
     private String id;
     private String version;
     
-    public KiiObject(KiiBucket bucket) {
+    public KiiObject(BUCKET bucket) {
         this.bucket = bucket;
         id = "";
         version = "";
     }
     
-    public KiiObject(KiiBucket bucket, String id) {
+    public KiiObject(BUCKET bucket, String id) {
         this.bucket = bucket;
         this.id = id;
         version = "";
     }
     
-    public KiiObject(KiiBucket bucket, JSONObject from) throws JSONException {
+    public KiiObject(BUCKET bucket, JSONObject from) throws JSONException {
         this.bucket = bucket;
         replace(from);
         id = from.optString(FIELD_ID, null);

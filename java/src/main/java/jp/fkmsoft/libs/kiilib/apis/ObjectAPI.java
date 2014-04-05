@@ -8,8 +8,8 @@ import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import org.json.JSONObject;
 
 
-public interface ObjectAPI<T extends KiiObject> {
-    public interface ObjectCallback<U extends KiiObject> extends KiiCallback {
+public interface ObjectAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> {
+    public interface ObjectCallback<T extends KiiBucket, U extends KiiObject<T>> extends KiiCallback {
         void onSuccess(U obj);
     };
     
@@ -17,19 +17,19 @@ public interface ObjectAPI<T extends KiiObject> {
         void onSuccess(String url);
     };
     
-    void getById(KiiBucket bucket, String id, ObjectCallback<T> callback);
+    void getById(BUCKET bucket, String id, ObjectCallback<BUCKET, OBJECT> callback);
     
-    void create(KiiBucket bucket, JSONObject obj, ObjectCallback<T> callback);
+    void create(BUCKET bucket, JSONObject obj, ObjectCallback<BUCKET, OBJECT> callback);
     
-    void update(T obj, ObjectCallback<T> callback);
+    void update(OBJECT obj, ObjectCallback<BUCKET, OBJECT> callback);
     
-    void updatePatch(T obj, JSONObject patch, ObjectCallback<T> callback);
+    void updatePatch(OBJECT obj, JSONObject patch, ObjectCallback<BUCKET, OBJECT> callback);
     
-    void updatePatchIfUnmodified(T obj, JSONObject patch, ObjectCallback<T> callback);
+    void updatePatchIfUnmodified(OBJECT obj, JSONObject patch, ObjectCallback<BUCKET, OBJECT> callback);
     
-    void updateBody(T obj, InputStream source, String contentType, ObjectCallback<T> callback);
+    void updateBody(OBJECT obj, InputStream source, String contentType, ObjectCallback<BUCKET, OBJECT> callback);
     
-    void publish(T obj, PublishCallback callback);
+    void publish(OBJECT obj, PublishCallback callback);
     
-    void delete(T obj, ObjectCallback<T> callback);
+    void delete(OBJECT obj, ObjectCallback<BUCKET, OBJECT> callback);
 }

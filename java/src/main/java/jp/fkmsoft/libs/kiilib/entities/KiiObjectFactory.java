@@ -5,6 +5,6 @@ import org.json.JSONObject;
 /**
  * Factory for KiiObject
  */
-public interface KiiObjectFactory<T extends KiiObject> {
-    T create(KiiBucket bucket, JSONObject body);
+public interface KiiObjectFactory<BUCKET extends KiiBucket,OBJECT extends KiiObject<BUCKET>> {
+    OBJECT create(BUCKET bucket, JSONObject body);
 }

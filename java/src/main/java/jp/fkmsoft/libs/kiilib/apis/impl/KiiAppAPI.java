@@ -9,6 +9,7 @@ import jp.fkmsoft.libs.kiilib.apis.ObjectAPI;
 import jp.fkmsoft.libs.kiilib.apis.TopicAPI;
 import jp.fkmsoft.libs.kiilib.apis.UserAPI;
 import jp.fkmsoft.libs.kiilib.entities.EntityFactory;
+import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
@@ -26,7 +27,8 @@ import org.json.JSONObject;
 public abstract class KiiAppAPI<
         USER extends KiiUser,
         GROUP extends KiiGroup<USER>,
-        OBJECT extends KiiObject> implements AppAPI<USER, OBJECT> {
+        BUCKET extends KiiBucket,
+        OBJECT extends KiiObject<BUCKET>> implements AppAPI<USER, BUCKET, OBJECT> {
 
     final String appId;
     final String appKey;
@@ -36,8 +38,8 @@ public abstract class KiiAppAPI<
     
     private final UserAPI<USER> userAPI;
     private final GroupAPI<GROUP, USER> groupAPI;
-    private final BucketAPI bucketAPI;
-    private final ObjectAPI<OBJECT> objectAPI;
+    private final BucketAPI<BUCKET, OBJECT> bucketAPI;
+    private final ObjectAPI<BUCKET, OBJECT> objectAPI;
     private final TopicAPI topicAPI;
     private final ACLAPI aclAPI;
     
@@ -46,12 +48,12 @@ public abstract class KiiAppAPI<
         this.appKey = appKey;
         this.baseUrl = baseUrl;
 
-        EntityFactory<USER, GROUP, OBJECT> factory = getEntityFactory();
+        EntityFactory<USER, GROUP, BUCKET, OBJECT> factory = getEntityFactory();
 
         userAPI = new KiiUserAPI<USER>(this, factory.getKiiUserFactory());
         groupAPI = new KiiGroupAPI<GROUP, USER>(this, factory.getKiiGroupFactory(), factory.getKiiUserFactory());
-        bucketAPI = new KiiBucketAPI(this);
-        objectAPI = new KiiObjectAPI<OBJECT>(this, factory.getKiiObjectFactory());
+        bucketAPI = new KiiBucketAPI<BUCKET, OBJECT>(this, factory.getKiiObjectFactory());
+        objectAPI = new KiiObjectAPI<BUCKET, OBJECT>(this, factory.getKiiObjectFactory());
         topicAPI = new KiiTopicAPI(this);
         aclAPI = new KiiACLAPI(this);
     }
@@ -177,12 +179,12 @@ public abstract class KiiAppAPI<
     }
 
     @Override
-    public BucketAPI bucketAPI() {
+    public BucketAPI<BUCKET, OBJECT> bucketAPI() {
         return bucketAPI;
     }
 
     @Override
-    public ObjectAPI<OBJECT> objectAPI() {
+    public ObjectAPI<BUCKET, OBJECT> objectAPI() {
         return objectAPI;
     }
 
@@ -198,5 +200,5 @@ public abstract class KiiAppAPI<
     
     public abstract KiiHTTPClient getHttpClient();
 
-    protected abstract EntityFactory<USER, GROUP, OBJECT> getEntityFactory();
+    protected abstract EntityFactory<USER, GROUP, BUCKET, OBJECT> getEntityFactory();
 }
