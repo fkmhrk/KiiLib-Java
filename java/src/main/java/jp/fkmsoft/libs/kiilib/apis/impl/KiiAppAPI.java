@@ -5,6 +5,7 @@ import jp.fkmsoft.libs.kiilib.apis.AppAPI;
 import jp.fkmsoft.libs.kiilib.apis.BucketAPI;
 import jp.fkmsoft.libs.kiilib.apis.GroupAPI;
 import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
+import jp.fkmsoft.libs.kiilib.apis.KiiException;
 import jp.fkmsoft.libs.kiilib.apis.ObjectAPI;
 import jp.fkmsoft.libs.kiilib.apis.TopicAPI;
 import jp.fkmsoft.libs.kiilib.apis.UserAPI;
@@ -74,7 +75,7 @@ public abstract class KiiAppAPI<
             json.put("client_id", clientId);
             json.put("client_secret", clientSecret);
         } catch (JSONException e) {
-            callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+            callback.onError(e);
             return;
         }
         
@@ -86,7 +87,7 @@ public abstract class KiiAppAPI<
                 if (status < 300) {
                     success(response);
                 } else {
-                    callback.onError(status, response.toString());
+                    callback.onError(new KiiException(status, response));
                 }
             }
             
@@ -97,13 +98,13 @@ public abstract class KiiAppAPI<
                     accessToken = token;
                     callback.onSuccess(token, mUserFactory.create(userId));
                 } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                    callback.onError(e);
                 }
             }
 
             @Override
             public void onException(Exception e) {
-                callback.onError(KiiCallback.STATUS_GENERAL_EXCEPTION, e.getMessage());
+                callback.onError(e);
             }
         });
     }
@@ -117,7 +118,7 @@ public abstract class KiiAppAPI<
             json.put("username", identifier);
             json.put("password", password);
         } catch (JSONException e) {
-            callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+            callback.onError(e);
             return;
         }
         
@@ -130,7 +131,7 @@ public abstract class KiiAppAPI<
                     accessToken = token;
                     callback.onSuccess(token, mUserFactory.create(userId));
                 } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                    callback.onError(e);
                 }
             }
         });
@@ -143,7 +144,7 @@ public abstract class KiiAppAPI<
         try {
             info.put("password", password);
         } catch (JSONException e) {
-            callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+            callback.onError(e);
             return;
         }
         
@@ -155,7 +156,7 @@ public abstract class KiiAppAPI<
                     String userId = response.getString("userID");
                     callback.onSuccess(mUserFactory.create(userId));
                 } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                    callback.onError(e);
                 }
             }
         });

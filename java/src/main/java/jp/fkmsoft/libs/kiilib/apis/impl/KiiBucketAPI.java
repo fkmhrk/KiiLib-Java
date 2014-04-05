@@ -40,7 +40,7 @@ class KiiBucketAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> i
                     
                     callback.onSuccess(result);
                 } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                    callback.onError(e);
                 }
             }
         });

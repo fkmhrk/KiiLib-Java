@@ -3,6 +3,7 @@ package jp.fkmsoft.libs.kiilib.apis.impl;
 import org.json.JSONObject;
 
 import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
+import jp.fkmsoft.libs.kiilib.apis.KiiException;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.ResponseHandler;
 
 abstract class KiiResponseHandler<T extends KiiCallback> implements ResponseHandler {
@@ -18,7 +19,7 @@ abstract class KiiResponseHandler<T extends KiiCallback> implements ResponseHand
         if (status < 300) {
             onSuccess(response, etag, callback);
         } else {
-            callback.onError(status, response.toString());
+            callback.onError(new KiiException(status, response));
         }
     }
 
@@ -30,7 +31,7 @@ abstract class KiiResponseHandler<T extends KiiCallback> implements ResponseHand
     
     @Override
     public void onException(Exception e) {
-        callback.onError(KiiCallback.STATUS_GENERAL_EXCEPTION, e.getMessage());
+        callback.onError(e);
     }
 
 }

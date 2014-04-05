@@ -65,7 +65,7 @@ class KiiTopicAPI<TOPIC extends KiiTopic> implements TopicAPI<TOPIC> {
                     JSONArray array = response.getJSONArray("topics");
                     callback.onSuccess(toList(array));
                 } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                    callback.onError(e);
                 }
             }
             
@@ -92,8 +92,8 @@ class KiiTopicAPI<TOPIC extends KiiTopic> implements TopicAPI<TOPIC> {
                 try {
                     String id = response.getString("pushMessageID");
                     callback.onSuccess(id);
-                } catch (JSONException e ) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                } catch (JSONException e) {
+                    callback.onError(e);
                 }
             }
         });
