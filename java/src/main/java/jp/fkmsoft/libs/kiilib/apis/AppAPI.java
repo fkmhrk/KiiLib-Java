@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiTopic;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
 
 /**
@@ -16,7 +17,9 @@ public interface AppAPI<
         USER extends KiiUser,
         GROUP extends KiiGroup<USER>,
         BUCKET extends KiiBucket,
-        OBJECT extends KiiObject<BUCKET>> {
+        OBJECT extends KiiObject<BUCKET>,
+        TOPIC extends KiiTopic
+        > {
     public interface LoginCallback<T extends KiiUser> extends KiiCallback {
         void onSuccess(String token, T user);
     }
@@ -41,7 +44,7 @@ public interface AppAPI<
     
     ObjectAPI<BUCKET, OBJECT> objectAPI();
     
-    TopicAPI topicAPI();
+    TopicAPI<TOPIC> topicAPI();
     
     ACLAPI aclAPI();
 }

@@ -12,6 +12,7 @@ import jp.fkmsoft.libs.kiilib.entities.EntityFactory;
 import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiTopic;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
 import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient;
@@ -29,7 +30,9 @@ public abstract class KiiAppAPI<
         USER extends KiiUser,
         GROUP extends KiiGroup<USER>,
         BUCKET extends KiiBucket,
-        OBJECT extends KiiObject<BUCKET>> implements AppAPI<USER, GROUP, BUCKET, OBJECT> {
+        OBJECT extends KiiObject<BUCKET>,
+        TOPIC extends KiiTopic
+        > implements AppAPI<USER, GROUP, BUCKET, OBJECT, TOPIC> {
 
     final String appId;
     final String appKey;
@@ -41,7 +44,7 @@ public abstract class KiiAppAPI<
     private final GroupAPI<USER, GROUP> groupAPI;
     private final BucketAPI<BUCKET, OBJECT> bucketAPI;
     private final ObjectAPI<BUCKET, OBJECT> objectAPI;
-    private final TopicAPI topicAPI;
+    private final TopicAPI<TOPIC> topicAPI;
     private final ACLAPI aclAPI;
 
     private KiiUserFactory<USER> mUserFactory;
@@ -51,14 +54,14 @@ public abstract class KiiAppAPI<
         this.appKey = appKey;
         this.baseUrl = baseUrl;
 
-        EntityFactory<USER, GROUP, BUCKET, OBJECT> factory = getEntityFactory();
+        EntityFactory<USER, GROUP, BUCKET, OBJECT, TOPIC> factory = getEntityFactory();
         mUserFactory = factory.getKiiUserFactory();
 
         userAPI = new KiiUserAPI<USER>(this, factory.getKiiUserFactory());
         groupAPI = new KiiGroupAPI<USER, GROUP>(this, factory.getKiiUserFactory(), factory.getKiiGroupFactory());
         bucketAPI = new KiiBucketAPI<BUCKET, OBJECT>(this, factory.getKiiObjectFactory());
         objectAPI = new KiiObjectAPI<BUCKET, OBJECT>(this, factory.getKiiObjectFactory());
-        topicAPI = new KiiTopicAPI(this);
+        topicAPI = new KiiTopicAPI<TOPIC>(this, factory.getKiitopicFactory());
         aclAPI = new KiiACLAPI<USER, GROUP>(this, factory.getKiiUserFactory(), factory.getKiiGroupFactory());
     }
 
@@ -193,7 +196,7 @@ public abstract class KiiAppAPI<
     }
 
     @Override
-    public TopicAPI topicAPI() {
+    public TopicAPI<TOPIC> topicAPI() {
         return topicAPI;
     }
 
@@ -204,5 +207,5 @@ public abstract class KiiAppAPI<
     
     public abstract KiiHTTPClient getHttpClient();
 
-    protected abstract EntityFactory<USER, GROUP, BUCKET, OBJECT> getEntityFactory();
+    protected abstract EntityFactory<USER, GROUP, BUCKET, OBJECT, TOPIC> getEntityFactory();
 }
