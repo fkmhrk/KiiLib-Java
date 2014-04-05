@@ -8,28 +8,28 @@ import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import org.json.JSONObject;
 
 
-public interface ObjectAPI {
-    public interface ObjectCallback extends KiiCallback {
-        void onSuccess(KiiObject obj);
+public interface ObjectAPI<T extends KiiObject> {
+    public interface ObjectCallback<U extends KiiObject> extends KiiCallback {
+        void onSuccess(U obj);
     };
     
     public interface PublishCallback extends KiiCallback {
         void onSuccess(String url);
     };
     
-    void getById(KiiBucket bucket, String id, ObjectCallback callback);
+    void getById(KiiBucket bucket, String id, ObjectCallback<T> callback);
     
-    void create(KiiBucket bucket, JSONObject obj, ObjectCallback callback);
+    void create(KiiBucket bucket, JSONObject obj, ObjectCallback<T> callback);
     
-    void update(KiiObject obj, ObjectCallback callback);
+    void update(T obj, ObjectCallback<T> callback);
     
-    void updatePatch(KiiObject obj, JSONObject patch, ObjectCallback callback);
+    void updatePatch(T obj, JSONObject patch, ObjectCallback<T> callback);
     
-    void updatePatchIfUnmodified(KiiObject obj, JSONObject patch, ObjectCallback callback);
+    void updatePatchIfUnmodified(T obj, JSONObject patch, ObjectCallback<T> callback);
     
-    void updateBody(KiiObject obj, InputStream source, String contentType, ObjectCallback callback);
+    void updateBody(T obj, InputStream source, String contentType, ObjectCallback<T> callback);
     
-    void publish(KiiObject obj, PublishCallback callback);
+    void publish(T obj, PublishCallback callback);
     
-    void delete(KiiObject obj, ObjectCallback callback);
+    void delete(T obj, ObjectCallback<T> callback);
 }

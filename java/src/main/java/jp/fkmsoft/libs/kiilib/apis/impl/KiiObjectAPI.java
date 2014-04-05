@@ -9,50 +9,49 @@ import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.apis.ObjectAPI;
 import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiObjectFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiObjectAPI implements ObjectAPI {
+class KiiObjectAPI<T extends KiiObject> implements ObjectAPI<T> {
 
     private final KiiAppAPI api;
-    
-    KiiObjectAPI(KiiAppAPI api) {
+    private final KiiObjectFactory<T> mFactory;
+
+    KiiObjectAPI(KiiAppAPI api, KiiObjectFactory<T> factory) {
         this.api = api;
+        this.mFactory = factory;
     }
     
     @Override
-    public void getById(final KiiBucket bucket, String id, ObjectCallback callback) {
+    public void getById(final KiiBucket bucket, String id, ObjectCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + bucket.getResourcePath() + "/objects/" + id;
         
         api.getHttpClient().sendJsonRequest(Method.GET, url, api.accessToken, 
-                null, null, null, new KiiResponseHandler<ObjectCallback>(callback) {
+                null, null, null, new KiiResponseHandler<ObjectCallback<T>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, ObjectCallback callback) {
-                try {
-                    callback.onSuccess(new KiiObject(bucket, response));
-                } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
-                }
+            protected void onSuccess(JSONObject response, String etag, ObjectCallback<T> callback) {
+                callback.onSuccess(mFactory.create(bucket, response));
             }
         });
     }
     
     @Override
-    public void create(final KiiBucket bucket, final JSONObject obj, final ObjectCallback callback) {
+    public void create(final KiiBucket bucket, final JSONObject obj, final ObjectCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + bucket.getResourcePath() + "/objects";
         
         api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken,
-                "application/json", null, obj, new KiiResponseHandler<ObjectCallback>(callback) {
+                "application/json", null, obj, new KiiResponseHandler<ObjectCallback<T>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, ObjectCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, ObjectCallback<T> callback) {
                 try {
                     long createdTime = response.getLong("createdAt");
                     String id = response.getString("objectID");
                     obj.put("_id", id);
                     
-                    KiiObject kiiObj = new KiiObject(bucket, obj);
+                    T kiiObj = mFactory.create(bucket, obj);
                     kiiObj.setCreatedTime(createdTime);
                     kiiObj.setVersion(etag);
                     
@@ -65,14 +64,14 @@ class KiiObjectAPI implements ObjectAPI {
     }
 
     @Override
-    public void update(final KiiObject obj, final ObjectCallback callback) {
+    public void update(final T obj, final ObjectCallback<T> callback) {
 
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath();
         
         api.getHttpClient().sendJsonRequest(Method.PUT, url, api.accessToken,
-                "application/json", null, obj, new KiiResponseHandler<ObjectCallback>(callback) {
+                "application/json", null, obj, new KiiResponseHandler<ObjectCallback<T>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, ObjectCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, ObjectCallback<T> callback) {
                 long modifiedTime = response.optLong("modifiedAt", -1);
                 if (modifiedTime != -1) {
                     obj.setModifiedTime(modifiedTime);
@@ -84,15 +83,15 @@ class KiiObjectAPI implements ObjectAPI {
     }
 
     @Override
-    public void updatePatch(final KiiObject obj, final JSONObject patch, final ObjectCallback callback) {
+    public void updatePatch(final T obj, final JSONObject patch, final ObjectCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath();
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("X-HTTP-Method-Override", "PATCH");
         
         api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken,
-                "application/json", headers, patch, new KiiResponseHandler<ObjectCallback>(callback) {
+                "application/json", headers, patch, new KiiResponseHandler<ObjectCallback<T>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, ObjectCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, ObjectCallback<T> callback) {
                 // copy to obj
                 @SuppressWarnings("unchecked")
                 Iterator<String> keys = patch.keys();
@@ -115,16 +114,16 @@ class KiiObjectAPI implements ObjectAPI {
     }
     
     @Override
-    public void updatePatchIfUnmodified(final KiiObject obj, final JSONObject patch, ObjectCallback callback) {
+    public void updatePatchIfUnmodified(final T obj, final JSONObject patch, ObjectCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath();
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("X-HTTP-Method-Override", "PATCH");
         headers.put("If-Match", obj.getVersion());
         
         api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken,
-                "application/json", headers, patch, new KiiResponseHandler<ObjectCallback>(callback) {
+                "application/json", headers, patch, new KiiResponseHandler<ObjectCallback<T>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, ObjectCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, ObjectCallback<T> callback) {
                 // copy to obj
                 @SuppressWarnings("unchecked")
                 Iterator<String> keys = patch.keys();
@@ -147,13 +146,13 @@ class KiiObjectAPI implements ObjectAPI {
     }
     
     @Override
-    public void updateBody(final KiiObject obj, InputStream source, String contentType, ObjectCallback callback) {
+    public void updateBody(final T obj, InputStream source, String contentType, ObjectCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath() + "/body";
         
         api.getHttpClient().sendStreamRequest(Method.PUT, url, api.accessToken,
-                contentType, null, source, new KiiResponseHandler<ObjectCallback>(callback) {
+                contentType, null, source, new KiiResponseHandler<ObjectCallback<T>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, ObjectCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, ObjectCallback<T> callback) {
                 long modifiedTime = response.optLong("modifiedAt", -1);
                 if (modifiedTime != -1) {
                     obj.setModifiedTime(modifiedTime);
@@ -165,7 +164,7 @@ class KiiObjectAPI implements ObjectAPI {
     }
     
     @Override
-    public void publish(KiiObject obj, PublishCallback callback) {
+    public void publish(T obj, PublishCallback callback) {
 
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath() + "/body/publish";
         
@@ -180,13 +179,13 @@ class KiiObjectAPI implements ObjectAPI {
     }
     
     @Override
-    public void delete(final KiiObject obj, final ObjectCallback callback) {
+    public void delete(final T obj, final ObjectCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath();
         
         api.getHttpClient().sendJsonRequest(Method.DELETE, url, api.accessToken, 
-                null, null, null, new KiiResponseHandler<ObjectCallback>(callback) {
+                null, null, null, new KiiResponseHandler<ObjectCallback<T>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, ObjectCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, ObjectCallback<T> callback) {
                 callback.onSuccess(obj);
             }
         });

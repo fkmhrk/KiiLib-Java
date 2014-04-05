@@ -9,6 +9,7 @@ import jp.fkmsoft.libs.kiilib.apis.ObjectAPI;
 import jp.fkmsoft.libs.kiilib.apis.TopicAPI;
 import jp.fkmsoft.libs.kiilib.apis.UserAPI;
 import jp.fkmsoft.libs.kiilib.entities.EntityFactory;
+import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
@@ -21,7 +22,9 @@ import org.json.JSONObject;
 /**
  * Implementation of {@link AppAPI}
  */
-public abstract class KiiAppAPI<USER extends KiiUser> implements AppAPI<USER> {
+public abstract class KiiAppAPI<
+        USER extends KiiUser,
+        OBJECT extends KiiObject> implements AppAPI<USER, OBJECT> {
 
     final String appId;
     final String appKey;
@@ -32,7 +35,7 @@ public abstract class KiiAppAPI<USER extends KiiUser> implements AppAPI<USER> {
     private final UserAPI<USER> userAPI;
     private final GroupAPI groupAPI;
     private final BucketAPI bucketAPI;
-    private final ObjectAPI objectAPI;
+    private final ObjectAPI<OBJECT> objectAPI;
     private final TopicAPI topicAPI;
     private final ACLAPI aclAPI;
     
@@ -41,12 +44,12 @@ public abstract class KiiAppAPI<USER extends KiiUser> implements AppAPI<USER> {
         this.appKey = appKey;
         this.baseUrl = baseUrl;
 
-        EntityFactory<USER> factory = getEntityFactory();
+        EntityFactory<USER, OBJECT> factory = getEntityFactory();
 
         userAPI = new KiiUserAPI<USER>(this, factory.getKiiUserFactory());
         groupAPI = new KiiGroupAPI(this);
         bucketAPI = new KiiBucketAPI(this);
-        objectAPI = new KiiObjectAPI(this);
+        objectAPI = new KiiObjectAPI<OBJECT>(this, factory.getKiiObjectFactory());
         topicAPI = new KiiTopicAPI(this);
         aclAPI = new KiiACLAPI(this);
     }
@@ -177,7 +180,7 @@ public abstract class KiiAppAPI<USER extends KiiUser> implements AppAPI<USER> {
     }
 
     @Override
-    public ObjectAPI objectAPI() {
+    public ObjectAPI<OBJECT> objectAPI() {
         return objectAPI;
     }
 
@@ -193,5 +196,5 @@ public abstract class KiiAppAPI<USER extends KiiUser> implements AppAPI<USER> {
     
     public abstract KiiHTTPClient getHttpClient();
 
-    protected abstract EntityFactory<USER> getEntityFactory();
+    protected abstract EntityFactory<USER, OBJECT> getEntityFactory();
 }

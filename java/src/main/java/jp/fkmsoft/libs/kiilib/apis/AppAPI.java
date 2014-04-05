@@ -1,5 +1,6 @@
 package jp.fkmsoft.libs.kiilib.apis;
 
+import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
 
 import org.json.JSONObject;
@@ -9,7 +10,7 @@ import org.json.JSONObject;
  * @author fkm
  *
  */
-public interface AppAPI<USER extends KiiUser> {
+public interface AppAPI<USER extends KiiUser, OBJECT extends KiiObject> {
     public interface LoginCallback extends KiiCallback {
         void onSuccess(String token, KiiUser user);
     }
@@ -32,7 +33,7 @@ public interface AppAPI<USER extends KiiUser> {
     
     BucketAPI bucketAPI();
     
-    ObjectAPI objectAPI();
+    ObjectAPI<OBJECT> objectAPI();
     
     TopicAPI topicAPI();
     
