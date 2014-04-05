@@ -10,5 +10,5 @@ public interface KiiCallback {
     public static final int STATUS_JSON_EXCEPTION = -2;
     public static final int STATUS_UNSUPPORTED_ENCODING_EXCEPTION = -3;
     
-    void onError(int status, String body);
+    void onError(Exception e);
 }

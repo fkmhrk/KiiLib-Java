@@ -1,6 +1,7 @@
 package jp.fkmsoft.libs.kiilib.apis.impl;
 
 import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
+import jp.fkmsoft.libs.kiilib.apis.KiiException;
 import jp.fkmsoft.libs.kiilib.apis.UserAPI;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
 import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
@@ -49,7 +50,7 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
                     user.replace(response);
                     callback.onSuccess(user);
                 } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                    callback.onError(e);
                 }
             }
         });
@@ -65,7 +66,7 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
                 json.put("verified", true);
             }
         } catch (JSONException e) {
-            callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+            callback.onError(e);
             return;
         }
         
@@ -77,7 +78,7 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
                     user.put("emailAddress", newEmail);
                     callback.onSuccess(user);
                 } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                    callback.onError(e);
                 }
             }
         });
@@ -94,7 +95,7 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
                 json.put("verified", true);
             }
         } catch (JSONException e) {
-            callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+            callback.onError(e);
             return;
         }
         
@@ -105,7 +106,7 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
                 if (status < 300) {
                     success(response);
                 } else {
-                    callback.onError(status, response.toString());
+                    callback.onError(new KiiException(status, response));
                 }
             }
             
@@ -114,13 +115,13 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
                     user.put("phoneNumber", newPhone);
                     callback.onSuccess(user);
                 } catch (JSONException e) {
-                    callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                    callback.onError(e);
                 }
             }
 
             @Override
             public void onException(Exception e) {
-                callback.onError(KiiCallback.STATUS_GENERAL_EXCEPTION, e.getMessage());
+                callback.onError(e);
             }
         });
     }
@@ -133,7 +134,7 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
             json.put("installationRegistrationID", regId);
             json.put("deviceType", "ANDROID");
         } catch (JSONException e) {
-            callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+            callback.onError(e);
             return;
         }
         
@@ -144,7 +145,7 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
                 if (status < 300) {
                     success(response);
                 } else {
-                    callback.onError(status, response.toString());
+                    callback.onError(new KiiException(status, response));
                 }
             }
             
@@ -154,7 +155,7 @@ class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
 
             @Override
             public void onException(Exception e) {
-                callback.onError(KiiCallback.STATUS_GENERAL_EXCEPTION, e.getMessage());
+                callback.onError(e);
             }
         });
     }

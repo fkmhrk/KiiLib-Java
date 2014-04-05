@@ -56,7 +56,7 @@ class KiiACLAPI<USER extends KiiUser, GROUP extends KiiGroup<USER>> implements A
                     }
                     callback.onSuccess(map);
                 } catch (JSONException e) {
-                     callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
+                     callback.onError(e);
                 }
             }
             
