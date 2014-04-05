@@ -9,6 +9,7 @@ import jp.fkmsoft.libs.kiilib.apis.ObjectAPI;
 import jp.fkmsoft.libs.kiilib.apis.TopicAPI;
 import jp.fkmsoft.libs.kiilib.apis.UserAPI;
 import jp.fkmsoft.libs.kiilib.entities.EntityFactory;
+import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
  */
 public abstract class KiiAppAPI<
         USER extends KiiUser,
+        GROUP extends KiiGroup<USER>,
         OBJECT extends KiiObject> implements AppAPI<USER, OBJECT> {
 
     final String appId;
@@ -33,7 +35,7 @@ public abstract class KiiAppAPI<
     String accessToken;
     
     private final UserAPI<USER> userAPI;
-    private final GroupAPI groupAPI;
+    private final GroupAPI<GROUP, USER> groupAPI;
     private final BucketAPI bucketAPI;
     private final ObjectAPI<OBJECT> objectAPI;
     private final TopicAPI topicAPI;
@@ -44,10 +46,10 @@ public abstract class KiiAppAPI<
         this.appKey = appKey;
         this.baseUrl = baseUrl;
 
-        EntityFactory<USER, OBJECT> factory = getEntityFactory();
+        EntityFactory<USER, GROUP, OBJECT> factory = getEntityFactory();
 
         userAPI = new KiiUserAPI<USER>(this, factory.getKiiUserFactory());
-        groupAPI = new KiiGroupAPI(this);
+        groupAPI = new KiiGroupAPI<GROUP, USER>(this, factory.getKiiGroupFactory(), factory.getKiiUserFactory());
         bucketAPI = new KiiBucketAPI(this);
         objectAPI = new KiiObjectAPI<OBJECT>(this, factory.getKiiObjectFactory());
         topicAPI = new KiiTopicAPI(this);
@@ -170,7 +172,7 @@ public abstract class KiiAppAPI<
     }
 
     @Override
-    public GroupAPI groupAPI() {
+    public GroupAPI<GROUP, USER> groupAPI() {
         return groupAPI;
     }
 
@@ -196,5 +198,5 @@ public abstract class KiiAppAPI<
     
     public abstract KiiHTTPClient getHttpClient();
 
-    protected abstract EntityFactory<USER, OBJECT> getEntityFactory();
+    protected abstract EntityFactory<USER, GROUP, OBJECT> getEntityFactory();
 }

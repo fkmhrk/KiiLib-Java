@@ -10,31 +10,31 @@ import jp.fkmsoft.libs.kiilib.entities.KiiUser;
  * @author fkm
  *
  */
-public interface GroupAPI {
-    public interface ListCallback extends KiiCallback {
-        void onSuccess(List<KiiGroup> result);
+public interface GroupAPI<GROUP extends KiiGroup, USER extends KiiUser> {
+    public interface ListCallback<U extends KiiGroup> extends KiiCallback {
+        void onSuccess(List<U> result);
     }
-    void getOwnedGroup(KiiUser user, ListCallback callback);
+    void getOwnedGroup(USER user, ListCallback<GROUP> callback);
     
-    void getJoinedGroup(KiiUser user, ListCallback callback);
+    void getJoinedGroup(USER user, ListCallback<GROUP> callback);
     
-    public interface GroupCallback extends KiiCallback {
-        void onSuccess(KiiGroup group);
-    }
-    
-    void create(String groupName, KiiUser owner, List<KiiUser> memberList, GroupCallback callback);
-    
-    public interface MemberCallback extends KiiCallback {
-        void onSuccess(List<KiiUser> memberList);
+    public interface GroupCallback<U extends KiiGroup> extends KiiCallback {
+        void onSuccess(U group);
     }
     
-    void getMembers(KiiGroup group, MemberCallback callback);
+    void create(String groupName, USER owner, List<USER> memberList, GroupCallback<GROUP> callback);
     
-    public interface AddCallback extends KiiCallback {
-        void onSuccess(KiiUser user);
+    public interface MemberCallback<U extends KiiUser> extends KiiCallback {
+        void onSuccess(List<U> memberList);
     }
     
-    void addMember(KiiGroup group, KiiUser user, GroupCallback callback);
+    void getMembers(GROUP group, MemberCallback<USER> callback);
     
-    void changeName(KiiGroup group, String name, GroupCallback callback);
+    public interface AddCallback<U extends KiiUser> extends KiiCallback {
+        void onSuccess(U user);
+    }
+    
+    void addMember(GROUP group, USER user, GroupCallback<GROUP> callback);
+    
+    void changeName(GROUP group, String name, GroupCallback<GROUP> callback);
 }
