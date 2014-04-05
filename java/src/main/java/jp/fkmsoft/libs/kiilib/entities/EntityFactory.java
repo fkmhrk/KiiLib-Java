@@ -10,7 +10,7 @@ public interface EntityFactory<
         OBJECT extends KiiObject<BUCKET>> {
     KiiUserFactory<USER> getKiiUserFactory();
 
-    KiiGroupFactory<GROUP, USER> getKiiGroupFactory();
+    KiiGroupFactory<USER, GROUP> getKiiGroupFactory();
 
     KiiObjectFactory<BUCKET, OBJECT> getKiiObjectFactory();
 }

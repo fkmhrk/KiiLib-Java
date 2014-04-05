@@ -18,16 +18,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiGroupAPI<GROUP extends KiiGroup<USER>, USER extends KiiUser> implements GroupAPI<GROUP, USER> {
+class KiiGroupAPI<USER extends KiiUser, GROUP extends KiiGroup<USER>> implements GroupAPI<USER, GROUP> {
 
     private final KiiAppAPI api;
-    private final KiiGroupFactory<GROUP, USER> mGroupFactory;
     private final KiiUserFactory<USER> mUserFactory;
+    private final KiiGroupFactory<USER, GROUP> mGroupFactory;
 
-    KiiGroupAPI(KiiAppAPI api, KiiGroupFactory<GROUP, USER> groupFactory, KiiUserFactory<USER> userFactory) {
+    KiiGroupAPI(KiiAppAPI api, KiiUserFactory<USER> userFactory, KiiGroupFactory<USER, GROUP> groupFactory) {
         this.api = api;
-        this.mGroupFactory = groupFactory;
         this.mUserFactory = userFactory;
+        this.mGroupFactory = groupFactory;
     }
     
     @Override

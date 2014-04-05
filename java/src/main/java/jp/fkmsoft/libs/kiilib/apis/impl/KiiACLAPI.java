@@ -11,19 +11,26 @@ import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.entities.ACLSubject;
 import jp.fkmsoft.libs.kiilib.entities.AccessControllable;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
+import jp.fkmsoft.libs.kiilib.entities.KiiGroupFactory;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
+import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiACLAPI implements ACLAPI {
+class KiiACLAPI<USER extends KiiUser, GROUP extends KiiGroup<USER>> implements ACLAPI {
 
     private final KiiAppAPI api;
+    private final KiiUserFactory<USER> mUserFactory;
+    private final KiiGroupFactory<USER, GROUP> mGroupFactory;
+
     
-    KiiACLAPI(KiiAppAPI api) {
+    KiiACLAPI(KiiAppAPI api, KiiUserFactory<USER> userFactory, KiiGroupFactory<USER, GROUP> groupFactory) {
         this.api = api;
+        this.mUserFactory = userFactory;
+        this.mGroupFactory = groupFactory;
     }
     
     @Override
@@ -59,10 +66,10 @@ class KiiACLAPI implements ACLAPI {
                     JSONObject item = array.getJSONObject(i);
                     if (item.has("userID")) {
                         String id = item.getString("userID");
-                        list.add(new KiiUser(id));
+                        list.add(mUserFactory.create(id));
                     } else if (item.has("groupID")) {
                         String id = item.getString("groupID");
-                        list.add(new KiiGroup(id, "", null));
+                        list.add(mGroupFactory.create(id, "", null));
                     }
                 }
                 return list;

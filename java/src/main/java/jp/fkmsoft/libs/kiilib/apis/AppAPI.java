@@ -1,10 +1,11 @@
 package jp.fkmsoft.libs.kiilib.apis;
 
+import org.json.JSONObject;
+
 import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
-
-import org.json.JSONObject;
 
 /**
  * Provides Kii API
@@ -13,19 +14,20 @@ import org.json.JSONObject;
  */
 public interface AppAPI<
         USER extends KiiUser,
+        GROUP extends KiiGroup<USER>,
         BUCKET extends KiiBucket,
         OBJECT extends KiiObject<BUCKET>> {
-    public interface LoginCallback extends KiiCallback {
-        void onSuccess(String token, KiiUser user);
+    public interface LoginCallback<T extends KiiUser> extends KiiCallback {
+        void onSuccess(String token, T user);
     }
-    void loginAsAdmin(String clientId, String clientSecret, LoginCallback callback);
+    void loginAsAdmin(String clientId, String clientSecret, LoginCallback<USER> callback);
     
-    void loginAsUser(String identifier, String password, LoginCallback callback);
+    void loginAsUser(String identifier, String password, LoginCallback<USER> callback);
     
-    public interface SignupCallback extends KiiCallback {
-        void onSuccess(KiiUser user);
+    public interface SignupCallback<T extends KiiUser> extends KiiCallback {
+        void onSuccess(T user);
     }
-    void signup(JSONObject info, String password, SignupCallback callback);
+    void signup(JSONObject info, String password, SignupCallback<USER> callback);
     
     void setAccessToken(String accessToken);
     
@@ -33,7 +35,7 @@ public interface AppAPI<
     
     UserAPI<USER> userAPI();
     
-    GroupAPI groupAPI();
+    GroupAPI<USER, GROUP> groupAPI();
     
     BucketAPI<BUCKET, OBJECT> bucketAPI();
     

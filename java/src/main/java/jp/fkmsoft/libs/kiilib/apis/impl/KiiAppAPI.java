@@ -13,6 +13,7 @@ import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
+import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.ResponseHandler;
@@ -28,7 +29,7 @@ public abstract class KiiAppAPI<
         USER extends KiiUser,
         GROUP extends KiiGroup<USER>,
         BUCKET extends KiiBucket,
-        OBJECT extends KiiObject<BUCKET>> implements AppAPI<USER, BUCKET, OBJECT> {
+        OBJECT extends KiiObject<BUCKET>> implements AppAPI<USER, GROUP, BUCKET, OBJECT> {
 
     final String appId;
     final String appKey;
@@ -37,11 +38,13 @@ public abstract class KiiAppAPI<
     String accessToken;
     
     private final UserAPI<USER> userAPI;
-    private final GroupAPI<GROUP, USER> groupAPI;
+    private final GroupAPI<USER, GROUP> groupAPI;
     private final BucketAPI<BUCKET, OBJECT> bucketAPI;
     private final ObjectAPI<BUCKET, OBJECT> objectAPI;
     private final TopicAPI topicAPI;
     private final ACLAPI aclAPI;
+
+    private KiiUserFactory<USER> mUserFactory;
     
     public KiiAppAPI(String appId, String appKey, String baseUrl) {
         this.appId = appId;
@@ -49,17 +52,18 @@ public abstract class KiiAppAPI<
         this.baseUrl = baseUrl;
 
         EntityFactory<USER, GROUP, BUCKET, OBJECT> factory = getEntityFactory();
+        mUserFactory = factory.getKiiUserFactory();
 
         userAPI = new KiiUserAPI<USER>(this, factory.getKiiUserFactory());
-        groupAPI = new KiiGroupAPI<GROUP, USER>(this, factory.getKiiGroupFactory(), factory.getKiiUserFactory());
+        groupAPI = new KiiGroupAPI<USER, GROUP>(this, factory.getKiiUserFactory(), factory.getKiiGroupFactory());
         bucketAPI = new KiiBucketAPI<BUCKET, OBJECT>(this, factory.getKiiObjectFactory());
         objectAPI = new KiiObjectAPI<BUCKET, OBJECT>(this, factory.getKiiObjectFactory());
         topicAPI = new KiiTopicAPI(this);
-        aclAPI = new KiiACLAPI(this);
+        aclAPI = new KiiACLAPI<USER, GROUP>(this, factory.getKiiUserFactory(), factory.getKiiGroupFactory());
     }
 
     @Override
-    public void loginAsAdmin(String clientId, String clientSecret, final LoginCallback callback) {
+    public void loginAsAdmin(String clientId, String clientSecret, final LoginCallback<USER> callback) {
         String url = baseUrl + "/oauth2/token";
         
         JSONObject json = new JSONObject();
@@ -88,7 +92,7 @@ public abstract class KiiAppAPI<
                     String token = response.getString("access_token");
                     String userId = response.getString("id");
                     accessToken = token;
-                    callback.onSuccess(token, new KiiUser(userId));
+                    callback.onSuccess(token, mUserFactory.create(userId));
                 } catch (JSONException e) {
                     callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
                 }
@@ -102,7 +106,7 @@ public abstract class KiiAppAPI<
     }
 
     @Override
-    public void loginAsUser(String identifier, String password, final LoginCallback callback) {
+    public void loginAsUser(String identifier, String password, final LoginCallback<USER> callback) {
         String url = baseUrl + "/oauth2/token";
         
         JSONObject json = new JSONObject();
@@ -114,14 +118,14 @@ public abstract class KiiAppAPI<
             return;
         }
         
-        getHttpClient().sendJsonRequest(Method.POST, url, null, "application/json", null, json, new KiiResponseHandler<LoginCallback>(callback) {
+        getHttpClient().sendJsonRequest(Method.POST, url, null, "application/json", null, json, new KiiResponseHandler<LoginCallback<USER>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, LoginCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, LoginCallback<USER> callback) {
                 try {
                     String token = response.getString("access_token");
                     String userId = response.getString("id");
                     accessToken = token;
-                    callback.onSuccess(token, new KiiUser(userId));
+                    callback.onSuccess(token, mUserFactory.create(userId));
                 } catch (JSONException e) {
                     callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
                 }
@@ -130,7 +134,7 @@ public abstract class KiiAppAPI<
     }
     
     @Override
-    public void signup(JSONObject info, String password, final SignupCallback callback) {
+    public void signup(JSONObject info, String password, final SignupCallback<USER> callback) {
         String url = baseUrl + "/apps/" + appId + "/users";
         
         try {
@@ -141,12 +145,12 @@ public abstract class KiiAppAPI<
         }
         
         getHttpClient().sendJsonRequest(Method.POST, url, null,
-                "application/json", null, info, new KiiResponseHandler<SignupCallback>(callback) {
+                "application/json", null, info, new KiiResponseHandler<SignupCallback<USER>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, SignupCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, SignupCallback<USER> callback) {
                 try {
                     String userId = response.getString("userID");
-                    callback.onSuccess(new KiiUser(userId));
+                    callback.onSuccess(mUserFactory.create(userId));
                 } catch (JSONException e) {
                     callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
                 }
@@ -174,7 +178,7 @@ public abstract class KiiAppAPI<
     }
 
     @Override
-    public GroupAPI<GROUP, USER> groupAPI() {
+    public GroupAPI<USER, GROUP> groupAPI() {
         return groupAPI;
     }
 

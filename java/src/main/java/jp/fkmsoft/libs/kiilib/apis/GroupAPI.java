@@ -10,7 +10,7 @@ import jp.fkmsoft.libs.kiilib.entities.KiiUser;
  * @author fkm
  *
  */
-public interface GroupAPI<GROUP extends KiiGroup, USER extends KiiUser> {
+public interface GroupAPI<USER extends KiiUser, GROUP extends KiiGroup> {
     public interface ListCallback<U extends KiiGroup> extends KiiCallback {
         void onSuccess(List<U> result);
     }
