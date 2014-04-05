@@ -11,23 +11,23 @@ import jp.fkmsoft.libs.kiilib.entities.KiiTopicMessage;
  * @author fkm
  *
  */
-public interface TopicAPI {
-    public interface TopicCallback extends KiiCallback {
-        void onSuccess(KiiTopic topic);
+public interface TopicAPI<TOPIC extends KiiTopic> {
+    public interface TopicCallback<T extends KiiTopic> extends KiiCallback {
+        void onSuccess(T topic);
     }
-    void create(BucketOwnable owner, String name, TopicCallback callback);
+    void create(BucketOwnable owner, String name, TopicCallback<TOPIC> callback);
     
-    void subscribe(KiiTopic topic, TopicCallback callback);
+    void subscribe(TOPIC topic, TopicCallback<TOPIC> callback);
     
     public interface SendMessageCallback extends KiiCallback {
         void onSuccess(String pushMessageId);
     }
     
-    void sendMessage(KiiTopic topic, KiiTopicMessage message, SendMessageCallback callback);
+    void sendMessage(TOPIC topic, KiiTopicMessage message, SendMessageCallback callback);
     
-    public interface TopicListCallback extends KiiCallback {
-        void onSuccess(List<KiiTopic> list);
+    public interface TopicListCallback<T extends KiiTopic> extends KiiCallback {
+        void onSuccess(List<T> list);
     }
     
-    void getList(BucketOwnable owner, TopicListCallback callback);
+    void getList(BucketOwnable owner, TopicListCallback<TOPIC> callback);
 }

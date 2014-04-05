@@ -9,51 +9,57 @@ import java.util.Map;
 import jp.fkmsoft.libs.kiilib.apis.GroupAPI;
 import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
+import jp.fkmsoft.libs.kiilib.entities.KiiGroupFactory;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
+import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiGroupAPI implements GroupAPI {
+class KiiGroupAPI<USER extends KiiUser, GROUP extends KiiGroup<USER>> implements GroupAPI<USER, GROUP> {
 
     private final KiiAppAPI api;
-    
-    KiiGroupAPI(KiiAppAPI api) {
+    private final KiiUserFactory<USER> mUserFactory;
+    private final KiiGroupFactory<USER, GROUP> mGroupFactory;
+
+    KiiGroupAPI(KiiAppAPI api, KiiUserFactory<USER> userFactory, KiiGroupFactory<USER, GROUP> groupFactory) {
         this.api = api;
+        this.mUserFactory = userFactory;
+        this.mGroupFactory = groupFactory;
     }
     
     @Override
-    public void getOwnedGroup(KiiUser user, final ListCallback callback) {
+    public void getOwnedGroup(USER user, final ListCallback<GROUP> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + "/groups?owner=" + user.getId();
         getGroup(url, callback);
     }
 
     @Override
-    public void getJoinedGroup(KiiUser user, ListCallback callback) {
+    public void getJoinedGroup(USER user, ListCallback<GROUP> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + "/groups?is_member=" + user.getId();
         getGroup(url, callback);
     }
     
-    private void getGroup(String url, final ListCallback callback) {
+    private void getGroup(String url, final ListCallback<GROUP> callback) {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("accept", "application/vnd.kii.GroupsRetrievalResponse+json");
         
         api.getHttpClient().sendJsonRequest(Method.GET, url, api.accessToken, 
-                null, headers, null, new KiiResponseHandler<ListCallback>(callback) {
+                null, headers, null, new KiiResponseHandler<ListCallback<GROUP>>(callback) {
 
             @Override
-            protected void onSuccess(JSONObject response, String etag, ListCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, ListCallback<GROUP> callback) {
                 try {
                     JSONArray array = response.getJSONArray("groups");
-                    List<KiiGroup> result = new ArrayList<KiiGroup>(array.length());
+                    List<GROUP> result = new ArrayList<GROUP>(array.length());
                     for (int i = 0 ; i < array.length() ; ++i) {
                         JSONObject json = array.getJSONObject(i);
                         String id = json.getString("groupID");
                         String name = json.getString("name");
                         String owner = json.getString("owner");
-                        result.add(new KiiGroup(id, name, new KiiUser(owner)));
+                        result.add(mGroupFactory.create(id, name, mUserFactory.create(owner)));
                     }
                     
                     callback.onSuccess(result);
@@ -65,7 +71,7 @@ class KiiGroupAPI implements GroupAPI {
     }
 
     @Override
-    public void create(final String groupName, final KiiUser owner, List<KiiUser> memberList, final GroupCallback callback) {
+    public void create(final String groupName, final USER owner, List<USER> memberList, final GroupCallback<GROUP> callback) {
         if (memberList == null) { memberList = Collections.emptyList(); }
         
         JSONObject json = new JSONObject();
@@ -84,12 +90,12 @@ class KiiGroupAPI implements GroupAPI {
         
         String url = api.baseUrl + "/apps/" + api.appId + "/groups";
         api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken, 
-                "application/vnd.kii.GroupCreationRequest+json", null, json, new KiiResponseHandler<GroupCallback>(callback) {
+                "application/vnd.kii.GroupCreationRequest+json", null, json, new KiiResponseHandler<GroupCallback<GROUP>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, GroupCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, GroupCallback<GROUP> callback) {
                 try {
                     String id = response.getString("groupID");
-                    callback.onSuccess(new KiiGroup(id, groupName, owner));
+                    callback.onSuccess(mGroupFactory.create(id, groupName, owner));
                 } catch (JSONException e) {
                     callback.onError(KiiCallback.STATUS_JSON_EXCEPTION, e.getMessage());
                 }
@@ -98,24 +104,24 @@ class KiiGroupAPI implements GroupAPI {
     }
 
     @Override
-    public void getMembers(KiiGroup group, final MemberCallback callback) {
+    public void getMembers(GROUP group, final MemberCallback<USER> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + group.getResourcePath() + "/members";
             
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("accept", "application/vnd.kii.MembersRetrievalResponse+json");
         
         api.getHttpClient().sendJsonRequest(Method.GET, url, api.accessToken, 
-                null, headers, null, new KiiResponseHandler<MemberCallback>(callback) {
+                null, headers, null, new KiiResponseHandler<MemberCallback<USER>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, MemberCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, MemberCallback<USER> callback) {
                 try {
                     JSONArray array = response.getJSONArray("members");
                     
-                    List<KiiUser> result = new ArrayList<KiiUser>(array.length());
+                    List<USER> result = new ArrayList<USER>(array.length());
                     for (int i = 0 ; i < array.length() ; ++i) {
                         JSONObject json = array.getJSONObject(i);
                         String id = json.getString("userID");
-                        result.add(new KiiUser(id));
+                        result.add(mUserFactory.create(id));
                     }
                     
                     callback.onSuccess(result);
@@ -127,12 +133,12 @@ class KiiGroupAPI implements GroupAPI {
     }
 
     @Override
-    public void addMember(final KiiGroup group, final KiiUser user, final GroupCallback callback) {
+    public void addMember(final GROUP group, final USER user, final GroupCallback<GROUP> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + group.getResourcePath() + "/members/" + user.getId();
         
-        api.getHttpClient().sendJsonRequest(Method.PUT, url, api.accessToken, "", null, null, new KiiResponseHandler<GroupCallback>(callback) {
+        api.getHttpClient().sendJsonRequest(Method.PUT, url, api.accessToken, "", null, null, new KiiResponseHandler<GroupCallback<GROUP>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, GroupCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, GroupCallback<GROUP> callback) {
                 group.getMembers().add(user);
                 callback.onSuccess(group);
             }
@@ -140,14 +146,14 @@ class KiiGroupAPI implements GroupAPI {
     }
     
     @Override
-    public void changeName(final KiiGroup group, final String name, final GroupCallback callback) {
+    public void changeName(final GROUP group, final String name, final GroupCallback<GROUP> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + group.getResourcePath() + "/name";
         
         api.getHttpClient().sendPlainTextRequest(Method.PUT, url, api.accessToken, 
-                null, name, new KiiResponseHandler<GroupCallback>(callback) {
+                null, name, new KiiResponseHandler<GroupCallback<GROUP>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, GroupCallback callback) {
-                callback.onSuccess(new KiiGroup(group.getId(), name, group.getOwner()));
+            protected void onSuccess(JSONObject response, String etag, GroupCallback<GROUP> callback) {
+                callback.onSuccess(mGroupFactory.create(group.getId(), name, group.getOwner()));
             }
         });
     }

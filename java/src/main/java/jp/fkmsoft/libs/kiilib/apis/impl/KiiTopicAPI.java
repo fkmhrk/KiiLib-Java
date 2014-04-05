@@ -9,6 +9,7 @@ import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.apis.TopicAPI;
 import jp.fkmsoft.libs.kiilib.entities.BucketOwnable;
 import jp.fkmsoft.libs.kiilib.entities.KiiTopic;
+import jp.fkmsoft.libs.kiilib.entities.KiiTopicFactory;
 import jp.fkmsoft.libs.kiilib.entities.KiiTopicMessage;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
@@ -16,48 +17,50 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiTopicAPI implements TopicAPI {
+class KiiTopicAPI<TOPIC extends KiiTopic> implements TopicAPI<TOPIC> {
 
     private final KiiAppAPI api;
+    private final KiiTopicFactory<TOPIC> mFactory;
     
-    KiiTopicAPI(KiiAppAPI api) {
+    KiiTopicAPI(KiiAppAPI api, KiiTopicFactory<TOPIC> factory) {
         this.api = api;
+        this.mFactory = factory;
     }
     
     @Override
-    public void create(final BucketOwnable owner, final String name, final TopicCallback callback) {
+    public void create(final BucketOwnable owner, final String name, final TopicCallback<TOPIC> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + owner.getResourcePath() + "/topics/" + name;
         
-        api.getHttpClient().sendJsonRequest(Method.PUT, url, api.accessToken, null, null, null, new KiiResponseHandler<TopicCallback>(callback) {
+        api.getHttpClient().sendJsonRequest(Method.PUT, url, api.accessToken, null, null, null, new KiiResponseHandler<TopicCallback<TOPIC>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, TopicCallback callback) {
-                callback.onSuccess(new KiiTopic(owner, name));
+            protected void onSuccess(JSONObject response, String etag, TopicCallback<TOPIC> callback) {
+                callback.onSuccess(mFactory.create(owner, name));
             }
         });
     }
 
     @Override
-    public void subscribe(final KiiTopic topic, final TopicCallback callback) {
+    public void subscribe(final TOPIC topic, final TopicCallback<TOPIC> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + topic.getResourcePath() + "/push/subscriptions/users";
         
-        api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken, null, null, null, new KiiResponseHandler<TopicCallback>(callback) {
+        api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken, null, null, null, new KiiResponseHandler<TopicCallback<TOPIC>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, TopicCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, TopicCallback<TOPIC> callback) {
                 callback.onSuccess(topic);
             }
         });
     }
     
     @Override
-    public void getList(final BucketOwnable owner, final TopicListCallback callback) {
+    public void getList(final BucketOwnable owner, final TopicListCallback<TOPIC> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + owner.getResourcePath() + "/topics";
         
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("accept", "application/vnd.kii.TopicsRetrievalResponse+json");
         
-        api.getHttpClient().sendJsonRequest(Method.GET, url, api.accessToken, null, headers, null, new KiiResponseHandler<TopicListCallback>(callback) {
+        api.getHttpClient().sendJsonRequest(Method.GET, url, api.accessToken, null, headers, null, new KiiResponseHandler<TopicListCallback<TOPIC>>(callback) {
             @Override
-            protected void onSuccess(JSONObject response, String etag, TopicListCallback callback) {
+            protected void onSuccess(JSONObject response, String etag, TopicListCallback<TOPIC> callback) {
                 try {
                     JSONArray array = response.getJSONArray("topics");
                     callback.onSuccess(toList(array));
@@ -66,11 +69,11 @@ class KiiTopicAPI implements TopicAPI {
                 }
             }
             
-            private List<KiiTopic> toList(JSONArray array) throws JSONException {
-                List<KiiTopic> list = new ArrayList<KiiTopic>(array.length());
+            private List<TOPIC> toList(JSONArray array) throws JSONException {
+                List<TOPIC> list = new ArrayList<TOPIC>(array.length());
                 for (int i = 0 ; i < array.length() ; ++i) {
                     JSONObject obj = array.getJSONObject(i);
-                    list.add(new KiiTopic(owner, obj.getString("topicID")));
+                    list.add(mFactory.create(owner, obj.getString("topicID")));
                 }
                 return list;
             }
@@ -79,7 +82,7 @@ class KiiTopicAPI implements TopicAPI {
     }
 
     @Override
-    public void sendMessage(KiiTopic topic, KiiTopicMessage message, final SendMessageCallback callback) {
+    public void sendMessage(TOPIC topic, KiiTopicMessage message, final SendMessageCallback callback) {
         String url = api.baseUrl + "/apps/" + api.appId + topic.getResourcePath() + "/push/messages";
         
         api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken,
