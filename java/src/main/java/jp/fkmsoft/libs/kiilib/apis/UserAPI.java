@@ -7,20 +7,20 @@ import jp.fkmsoft.libs.kiilib.entities.KiiUser;
  * @author fkm
  *
  */
-public interface UserAPI {
-    public interface UserCallback extends KiiCallback {
-        void onSuccess(KiiUser user);
+public interface UserAPI<T extends KiiUser> {
+    public interface UserCallback<U extends KiiUser> extends KiiCallback {
+        void onSuccess(U user);
     }
     
-    void findUserByUsername(String username, UserCallback callback);
+    void findUserByUsername(String username, UserCallback<T> callback);
     
-    void findUserByEmail(String email, UserCallback callback);
+    void findUserByEmail(String email, UserCallback<T> callback);
     
-    void findUserByPhone(String phone, UserCallback callback);
+    void findUserByPhone(String phone, UserCallback<T> callback);
     
-    void updateEmail(KiiUser user, String newEmail, boolean verified, UserCallback callback);
+    void updateEmail(T user, String newEmail, boolean verified, UserCallback<T> callback);
     
-    void updatePhone(KiiUser user, String newPhone, boolean verified, UserCallback callback);
+    void updatePhone(T user, String newPhone, boolean verified, UserCallback<T> callback);
     
-    void installDevice(String regId, UserCallback callback);
+    void installDevice(String regId, UserCallback<T> callback);
 }
