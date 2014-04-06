@@ -52,6 +52,7 @@ class KiiObjectAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BU
                     
                     OBJECT kiiObj = mFactory.create(bucket, obj);
                     kiiObj.setCreatedTime(createdTime);
+                    kiiObj.setModifiedTime(createdTime);
                     kiiObj.setVersion(etag);
                     
                     callback.onSuccess(kiiObj);
@@ -63,7 +64,7 @@ class KiiObjectAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BU
     }
 
     @Override
-    public void update(final OBJECT obj, final ObjectCallback<BUCKET, OBJECT> callback) {
+    public void save(final OBJECT obj, final ObjectCallback<BUCKET, OBJECT> callback) {
 
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath();
         
@@ -145,7 +146,7 @@ class KiiObjectAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BU
     }
     
     @Override
-    public void updateBody(final OBJECT obj, InputStream source, String contentType, ObjectCallback<BUCKET, OBJECT> callback) {
+    public void updateBody(final OBJECT obj, String contentType, InputStream source, ObjectCallback<BUCKET, OBJECT> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath() + "/body";
         
         api.getHttpClient().sendStreamRequest(Method.PUT, url, api.accessToken,

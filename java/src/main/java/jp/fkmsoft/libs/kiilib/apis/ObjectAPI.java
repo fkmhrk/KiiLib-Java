@@ -21,13 +21,13 @@ public interface ObjectAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseO
     
     void create(BUCKET bucket, JSONObject obj, ObjectCallback<BUCKET, OBJECT> callback);
     
-    void update(OBJECT obj, ObjectCallback<BUCKET, OBJECT> callback);
+    void save(OBJECT obj, ObjectCallback<BUCKET, OBJECT> callback);
     
     void updatePatch(OBJECT obj, JSONObject patch, ObjectCallback<BUCKET, OBJECT> callback);
     
     void updatePatchIfUnmodified(OBJECT obj, JSONObject patch, ObjectCallback<BUCKET, OBJECT> callback);
     
-    void updateBody(OBJECT obj, InputStream source, String contentType, ObjectCallback<BUCKET, OBJECT> callback);
+    void updateBody(OBJECT obj, String contentType, InputStream source, ObjectCallback<BUCKET, OBJECT> callback);
     
     void publish(OBJECT obj, PublishCallback callback);
     
