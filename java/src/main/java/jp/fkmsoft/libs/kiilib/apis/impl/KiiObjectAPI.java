@@ -5,17 +5,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.apis.ObjectAPI;
-import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
-import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiObjectFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiObjectAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> implements ObjectAPI<BUCKET, OBJECT> {
+class KiiObjectAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BUCKET>> implements ObjectAPI<BUCKET, OBJECT> {
 
     private final KiiAppAPI api;
     private final KiiObjectFactory<BUCKET, OBJECT> mFactory;

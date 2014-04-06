@@ -4,17 +4,16 @@ import jp.fkmsoft.libs.kiilib.apis.ACLAPI;
 import jp.fkmsoft.libs.kiilib.apis.AppAPI;
 import jp.fkmsoft.libs.kiilib.apis.BucketAPI;
 import jp.fkmsoft.libs.kiilib.apis.GroupAPI;
-import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.apis.KiiException;
 import jp.fkmsoft.libs.kiilib.apis.ObjectAPI;
 import jp.fkmsoft.libs.kiilib.apis.TopicAPI;
 import jp.fkmsoft.libs.kiilib.apis.UserAPI;
 import jp.fkmsoft.libs.kiilib.entities.EntityFactory;
-import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
-import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
-import jp.fkmsoft.libs.kiilib.entities.KiiObject;
-import jp.fkmsoft.libs.kiilib.entities.KiiTopic;
-import jp.fkmsoft.libs.kiilib.entities.KiiUser;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseGroup;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseTopic;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseUser;
 import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
@@ -28,11 +27,11 @@ import org.json.JSONObject;
  * Implementation of {@link AppAPI}
  */
 public abstract class KiiAppAPI<
-        USER extends KiiUser,
-        GROUP extends KiiGroup<USER>,
-        BUCKET extends KiiBucket,
-        OBJECT extends KiiObject<BUCKET>,
-        TOPIC extends KiiTopic
+        USER extends KiiBaseUser,
+        GROUP extends KiiBaseGroup<USER>,
+        BUCKET extends KiiBaseBucket,
+        OBJECT extends KiiBaseObject<BUCKET>,
+        TOPIC extends KiiBaseTopic
         > implements AppAPI<USER, GROUP, BUCKET, OBJECT, TOPIC> {
 
     final String appId;

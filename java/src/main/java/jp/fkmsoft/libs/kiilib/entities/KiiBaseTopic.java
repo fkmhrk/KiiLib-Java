@@ -1,18 +1,18 @@
 package jp.fkmsoft.libs.kiilib.entities;
 
 /**
- * Describes bucket
+ * Describes topic
  * @author fkm
  *
  */
-public class KiiBucket implements AccessControllable {
+public class KiiBaseTopic implements AccessControllable {
 
     private final BucketOwnable owner;
     private final String name;
     
     private static BucketOwnable APP_SCOPE = new KiiApp();
     
-    public KiiBucket(BucketOwnable owner, String name) {
+    public KiiBaseTopic(BucketOwnable owner, String name) {
         if (owner == null) {
             owner = APP_SCOPE;
         }
@@ -21,11 +21,10 @@ public class KiiBucket implements AccessControllable {
     }
     
     public String getResourcePath() {
-        return owner.getResourcePath() + "/buckets/" + name;
+        return owner.getResourcePath() + "/topics/" + name;
     }
 
     public String getName() {
         return name;
     }
-    
 }

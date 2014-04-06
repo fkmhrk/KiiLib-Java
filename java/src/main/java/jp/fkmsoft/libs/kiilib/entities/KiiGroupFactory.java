@@ -1,8 +1,8 @@
 package jp.fkmsoft.libs.kiilib.entities;
 
 /**
- * Factory for KiiGroup
+ * Factory for KiiBaseGroup
  */
-public interface KiiGroupFactory<USER extends KiiUser, GROUP extends KiiGroup> {
+public interface KiiGroupFactory<USER extends KiiBaseUser, GROUP extends KiiBaseGroup> {
     GROUP create(String id, String name, USER owner);
 }

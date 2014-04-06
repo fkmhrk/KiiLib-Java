@@ -2,20 +2,20 @@ package jp.fkmsoft.libs.kiilib.apis;
 
 import java.io.InputStream;
 
-import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
-import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseObject;
 
 import org.json.JSONObject;
 
 
-public interface ObjectAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> {
-    public interface ObjectCallback<T extends KiiBucket, U extends KiiObject<T>> extends KiiCallback {
+public interface ObjectAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BUCKET>> {
+    public interface ObjectCallback<T extends KiiBaseBucket, U extends KiiBaseObject<T>> extends KiiCallback {
         void onSuccess(U obj);
-    };
+    }
     
     public interface PublishCallback extends KiiCallback {
         void onSuccess(String url);
-    };
+    }
     
     void getById(BUCKET bucket, String id, ObjectCallback<BUCKET, OBJECT> callback);
     

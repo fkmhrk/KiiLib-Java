@@ -2,11 +2,11 @@ package jp.fkmsoft.libs.kiilib.apis;
 
 import org.json.JSONObject;
 
-import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
-import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
-import jp.fkmsoft.libs.kiilib.entities.KiiObject;
-import jp.fkmsoft.libs.kiilib.entities.KiiTopic;
-import jp.fkmsoft.libs.kiilib.entities.KiiUser;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseGroup;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseTopic;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseUser;
 
 /**
  * Provides Kii API
@@ -14,20 +14,20 @@ import jp.fkmsoft.libs.kiilib.entities.KiiUser;
  *
  */
 public interface AppAPI<
-        USER extends KiiUser,
-        GROUP extends KiiGroup<USER>,
-        BUCKET extends KiiBucket,
-        OBJECT extends KiiObject<BUCKET>,
-        TOPIC extends KiiTopic
+        USER extends KiiBaseUser,
+        GROUP extends KiiBaseGroup<USER>,
+        BUCKET extends KiiBaseBucket,
+        OBJECT extends KiiBaseObject<BUCKET>,
+        TOPIC extends KiiBaseTopic
         > {
-    public interface LoginCallback<T extends KiiUser> extends KiiCallback {
+    public interface LoginCallback<T extends KiiBaseUser> extends KiiCallback {
         void onSuccess(String token, T user);
     }
     void loginAsAdmin(String clientId, String clientSecret, LoginCallback<USER> callback);
     
     void loginAsUser(String identifier, String password, LoginCallback<USER> callback);
     
-    public interface SignupCallback<T extends KiiUser> extends KiiCallback {
+    public interface SignupCallback<T extends KiiBaseUser> extends KiiCallback {
         void onSuccess(T user);
     }
     void signup(JSONObject info, String password, SignupCallback<USER> callback);

@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import jp.fkmsoft.libs.kiilib.apis.ACLAPI;
-import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.entities.ACLSubject;
 import jp.fkmsoft.libs.kiilib.entities.AccessControllable;
-import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseGroup;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseUser;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroupFactory;
-import jp.fkmsoft.libs.kiilib.entities.KiiUser;
 import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
@@ -20,7 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiACLAPI<USER extends KiiUser, GROUP extends KiiGroup<USER>> implements ACLAPI {
+class KiiACLAPI<USER extends KiiBaseUser, GROUP extends KiiBaseGroup<USER>> implements ACLAPI {
 
     private final KiiAppAPI api;
     private final KiiUserFactory<USER> mUserFactory;
