@@ -36,6 +36,10 @@ public class MockHttpClient implements KiiHTTPClient {
     }
 
     public void addToSendJson(int status, String body, String etag) {
+        if (body == null) {
+            mSendJsonQueue.add(new MockResponse(status, null, etag));
+            return;
+        }
         try {
             mSendJsonQueue.add(new MockResponse(status, new JSONObject(body), etag));
         } catch (JSONException e) {
