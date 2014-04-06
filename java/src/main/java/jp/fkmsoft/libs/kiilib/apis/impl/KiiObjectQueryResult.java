@@ -3,10 +3,10 @@ package jp.fkmsoft.libs.kiilib.apis.impl;
 import java.util.ArrayList;
 
 import jp.fkmsoft.libs.kiilib.apis.QueryResult;
-import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
-import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseObject;
 
-class KiiObjectQueryResult<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> extends ArrayList<OBJECT> implements QueryResult<BUCKET, OBJECT> {
+class KiiObjectQueryResult<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BUCKET>> extends ArrayList<OBJECT> implements QueryResult<BUCKET, OBJECT> {
 
     /**
      * 

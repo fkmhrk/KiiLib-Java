@@ -1,7 +1,7 @@
 package jp.fkmsoft.libs.kiilib.apis;
 
-import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
-import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseObject;
 import jp.fkmsoft.libs.kiilib.entities.QueryParams;
 
 /**
@@ -9,13 +9,13 @@ import jp.fkmsoft.libs.kiilib.entities.QueryParams;
  * @author fkm
  *
  */
-public interface BucketAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> {
-    public interface QueryCallback<T extends KiiBucket, U extends KiiObject<T>> extends KiiCallback {
+public interface BucketAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BUCKET>> {
+    public interface QueryCallback<T extends KiiBaseBucket, U extends KiiBaseObject<T>> extends KiiCallback {
         void onSuccess(QueryResult<T, U> result);
     }
     void query(BUCKET bucket, QueryParams params, QueryCallback<BUCKET, OBJECT> callback);
     
-    public interface BucketCallback<U extends KiiBucket> extends KiiCallback {
+    public interface BucketCallback<U extends KiiBaseBucket> extends KiiCallback {
         void onSuccess(U bucket);
     }
     

@@ -7,7 +7,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class KiiUser extends JSONObject implements BucketOwnable, ACLSubject {
+public class KiiBaseUser extends JSONObject implements BucketOwnable, ACLSubject {
 
     private static final String FIELD_EMAIL = "emailAddress";
     private static final String FIELD_PHONE = "phoneNumber";
@@ -15,12 +15,12 @@ public class KiiUser extends JSONObject implements BucketOwnable, ACLSubject {
     
     private final String id;
     
-    public KiiUser(String id) {
+    public KiiBaseUser(String id) {
         super();
         this.id = id;
     }
     
-    private KiiUser(String id, String jsonString) throws JSONException {
+    private KiiBaseUser(String id, String jsonString) throws JSONException {
         super(jsonString);
         this.id = id;
     }

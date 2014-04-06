@@ -1,8 +1,8 @@
 package jp.fkmsoft.libs.kiilib.entities;
 
 /**
- * Factory for KiiBucket
+ * Factory for KiiBaseBucket
  */
-public interface KiiBucketFactory<BUCKET extends KiiBucket> {
+public interface KiiBucketFactory<BUCKET extends KiiBaseBucket> {
     BUCKET create();
 }

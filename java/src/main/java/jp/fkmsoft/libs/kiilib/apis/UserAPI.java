@@ -1,14 +1,14 @@
 package jp.fkmsoft.libs.kiilib.apis;
 
-import jp.fkmsoft.libs.kiilib.entities.KiiUser;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseUser;
 
 /**
  * Provides User related APIs. To get this instance, Please call {@link AppAPI#userAPI()}
  * @author fkm
  *
  */
-public interface UserAPI<T extends KiiUser> {
-    public interface UserCallback<U extends KiiUser> extends KiiCallback {
+public interface UserAPI<T extends KiiBaseUser> {
+    public interface UserCallback<U extends KiiBaseUser> extends KiiCallback {
         void onSuccess(U user);
     }
     

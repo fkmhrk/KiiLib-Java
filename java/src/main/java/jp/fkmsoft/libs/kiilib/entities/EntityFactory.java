@@ -4,11 +4,11 @@ package jp.fkmsoft.libs.kiilib.entities;
  * Factory interface
  */
 public interface EntityFactory<
-        USER extends KiiUser,
-        GROUP extends KiiGroup<USER>,
-        BUCKET extends KiiBucket,
-        OBJECT extends KiiObject<BUCKET>,
-        TOPIC extends KiiTopic
+        USER extends KiiBaseUser,
+        GROUP extends KiiBaseGroup<USER>,
+        BUCKET extends KiiBaseBucket,
+        OBJECT extends KiiBaseObject<BUCKET>,
+        TOPIC extends KiiBaseTopic
         > {
     KiiUserFactory<USER> getKiiUserFactory();
 

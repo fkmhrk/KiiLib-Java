@@ -1,9 +1,8 @@
 package jp.fkmsoft.libs.kiilib.apis.impl;
 
 import jp.fkmsoft.libs.kiilib.apis.BucketAPI;
-import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
-import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
-import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiObjectFactory;
 import jp.fkmsoft.libs.kiilib.entities.QueryParams;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
@@ -12,7 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiBucketAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> implements BucketAPI<BUCKET, OBJECT> {
+class KiiBucketAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BUCKET>> implements BucketAPI<BUCKET, OBJECT> {
 
     private final KiiAppAPI api;
     private final KiiObjectFactory<BUCKET, OBJECT> mObjectFactory;
