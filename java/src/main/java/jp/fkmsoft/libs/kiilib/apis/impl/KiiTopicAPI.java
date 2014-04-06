@@ -5,10 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.apis.TopicAPI;
 import jp.fkmsoft.libs.kiilib.entities.BucketOwnable;
-import jp.fkmsoft.libs.kiilib.entities.KiiTopic;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseTopic;
 import jp.fkmsoft.libs.kiilib.entities.KiiTopicFactory;
 import jp.fkmsoft.libs.kiilib.entities.KiiTopicMessage;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
@@ -17,7 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiTopicAPI<TOPIC extends KiiTopic> implements TopicAPI<TOPIC> {
+class KiiTopicAPI<TOPIC extends KiiBaseTopic> implements TopicAPI<TOPIC> {
 
     private final KiiAppAPI api;
     private final KiiTopicFactory<TOPIC> mFactory;

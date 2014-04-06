@@ -7,8 +7,8 @@ import org.json.JSONObject;
  */
 public class KiiException extends Exception {
 
-    private int mStatus;
-    private JSONObject mBody;
+    private final int mStatus;
+    private final JSONObject mBody;
 
     public KiiException(int status, JSONObject body) {
         super();

@@ -22,7 +22,7 @@ public class KiiTopicMessage {
     private static final String FIELD_GCM = "gcm";
     private static final String FIELD_APNS = "apns";
     
-    private JSONObject data;
+    private final JSONObject data;
     private boolean sendToDevelopment = true;
     private boolean sendToProduction = true;
     private String pushMessageType;
@@ -32,8 +32,8 @@ public class KiiTopicMessage {
     private boolean sendOrigin = false;
     private boolean sendObjectScope = true;
     private boolean sendTopicID = true;
-    private GCM gcm = new GCM();
-    private APNs apns = new APNs();
+    private final GCM gcm = new GCM();
+    private final APNs apns = new APNs();
     
     public KiiTopicMessage(JSONObject data, String type) {
         this.data = data;
@@ -114,7 +114,7 @@ public class KiiTopicMessage {
         private static final String FIELD_DATA = "data";
         
         private boolean enabled = true;
-        private JSONObject data = new JSONObject();
+        private final JSONObject data = new JSONObject();
         
         public JSONObject getData() {
             return data;
@@ -140,8 +140,8 @@ public class KiiTopicMessage {
         private static final String FIELD_BADGE = "badge";
         
         private boolean enabled = true;
-        private JSONObject data = new JSONObject();
-        private Alert alert = new Alert();
+        private final JSONObject data = new JSONObject();
+        private final Alert alert = new Alert();
         private String sound;
         private int badge;
         

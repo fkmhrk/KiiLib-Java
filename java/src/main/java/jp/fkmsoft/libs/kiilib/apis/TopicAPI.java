@@ -3,7 +3,7 @@ package jp.fkmsoft.libs.kiilib.apis;
 import java.util.List;
 
 import jp.fkmsoft.libs.kiilib.entities.BucketOwnable;
-import jp.fkmsoft.libs.kiilib.entities.KiiTopic;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseTopic;
 import jp.fkmsoft.libs.kiilib.entities.KiiTopicMessage;
 
 /**
@@ -11,8 +11,8 @@ import jp.fkmsoft.libs.kiilib.entities.KiiTopicMessage;
  * @author fkm
  *
  */
-public interface TopicAPI<TOPIC extends KiiTopic> {
-    public interface TopicCallback<T extends KiiTopic> extends KiiCallback {
+public interface TopicAPI<TOPIC extends KiiBaseTopic> {
+    public interface TopicCallback<T extends KiiBaseTopic> extends KiiCallback {
         void onSuccess(T topic);
     }
     void create(BucketOwnable owner, String name, TopicCallback<TOPIC> callback);
@@ -25,7 +25,7 @@ public interface TopicAPI<TOPIC extends KiiTopic> {
     
     void sendMessage(TOPIC topic, KiiTopicMessage message, SendMessageCallback callback);
     
-    public interface TopicListCallback<T extends KiiTopic> extends KiiCallback {
+    public interface TopicListCallback<T extends KiiBaseTopic> extends KiiCallback {
         void onSuccess(List<T> list);
     }
     

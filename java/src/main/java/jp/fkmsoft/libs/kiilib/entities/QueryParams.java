@@ -19,14 +19,14 @@ public class QueryParams {
     private static final String FIELD_PAGINATION_KEY = "paginationKey";
     private static final String FIELD_BESTEFFORT_LIMIT = "bestEffortLimit";
     
-    private JSONObject json = new JSONObject();
-    private JSONObject queryJson = new JSONObject();
+    private final JSONObject json = new JSONObject();
+    private final JSONObject queryJson = new JSONObject();
     
     public QueryParams(KiiClause clause) {
         try {
             queryJson.put(FIELD_CLAUSE, clause.toJson());
         } catch (JSONException e) {
-            return;
+            // nop
         }
     }
     

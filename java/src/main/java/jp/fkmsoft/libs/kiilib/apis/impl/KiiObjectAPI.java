@@ -5,17 +5,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.apis.ObjectAPI;
-import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
-import jp.fkmsoft.libs.kiilib.entities.KiiObject;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseBucket;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiObjectFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiObjectAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> implements ObjectAPI<BUCKET, OBJECT> {
+class KiiObjectAPI<BUCKET extends KiiBaseBucket, OBJECT extends KiiBaseObject<BUCKET>> implements ObjectAPI<BUCKET, OBJECT> {
 
     private final KiiAppAPI api;
     private final KiiObjectFactory<BUCKET, OBJECT> mFactory;
@@ -53,6 +52,7 @@ class KiiObjectAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> i
                     
                     OBJECT kiiObj = mFactory.create(bucket, obj);
                     kiiObj.setCreatedTime(createdTime);
+                    kiiObj.setModifiedTime(createdTime);
                     kiiObj.setVersion(etag);
                     
                     callback.onSuccess(kiiObj);
@@ -64,7 +64,7 @@ class KiiObjectAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> i
     }
 
     @Override
-    public void update(final OBJECT obj, final ObjectCallback<BUCKET, OBJECT> callback) {
+    public void save(final OBJECT obj, final ObjectCallback<BUCKET, OBJECT> callback) {
 
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath();
         
@@ -146,7 +146,7 @@ class KiiObjectAPI<BUCKET extends KiiBucket, OBJECT extends KiiObject<BUCKET>> i
     }
     
     @Override
-    public void updateBody(final OBJECT obj, InputStream source, String contentType, ObjectCallback<BUCKET, OBJECT> callback) {
+    public void updateBody(final OBJECT obj, String contentType, InputStream source, ObjectCallback<BUCKET, OBJECT> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + obj.getResourcePath() + "/body";
         
         api.getHttpClient().sendStreamRequest(Method.PUT, url, api.accessToken,

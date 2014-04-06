@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import jp.fkmsoft.libs.kiilib.apis.GroupAPI;
-import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
-import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseGroup;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseUser;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroupFactory;
-import jp.fkmsoft.libs.kiilib.entities.KiiUser;
 import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 
@@ -18,7 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiGroupAPI<USER extends KiiUser, GROUP extends KiiGroup<USER>> implements GroupAPI<USER, GROUP> {
+class KiiGroupAPI<USER extends KiiBaseUser, GROUP extends KiiBaseGroup<USER>> implements GroupAPI<USER, GROUP> {
 
     private final KiiAppAPI api;
     private final KiiUserFactory<USER> mUserFactory;
@@ -80,7 +79,7 @@ class KiiGroupAPI<USER extends KiiUser, GROUP extends KiiGroup<USER>> implements
             json.put("owner", owner.getId());
             
             JSONArray memberArray = new JSONArray();
-            for (KiiUser member : memberList) {
+            for (KiiBaseUser member : memberList) {
                 memberArray.put(member.getId());
             }
             json.put("members", memberArray);

@@ -8,17 +8,17 @@ import java.util.List;
  * @author fkm
  *
  */
-public class KiiGroup<USER extends KiiUser> implements BucketOwnable, AccessControllable, ACLSubject {
+public class KiiBaseGroup<USER extends KiiBaseUser> implements BucketOwnable, AccessControllable, ACLSubject {
     private final String id;
     private final String name;
     private final USER owner;
     private final List<USER> members;
     
-    public KiiGroup(String id) {
+    protected KiiBaseGroup(String id) {
         this(id, null, null);
     }
     
-    public KiiGroup(String id, String name, USER owner) {
+    protected KiiBaseGroup(String id, String name, USER owner) {
         this.id = id;
         this.name = name;
         this.owner = owner;

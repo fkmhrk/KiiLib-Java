@@ -1,9 +1,8 @@
 package jp.fkmsoft.libs.kiilib.apis.impl;
 
-import jp.fkmsoft.libs.kiilib.apis.KiiCallback;
 import jp.fkmsoft.libs.kiilib.apis.KiiException;
 import jp.fkmsoft.libs.kiilib.apis.UserAPI;
-import jp.fkmsoft.libs.kiilib.entities.KiiUser;
+import jp.fkmsoft.libs.kiilib.entities.KiiBaseUser;
 import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.Method;
 import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.ResponseHandler;
@@ -11,7 +10,7 @@ import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.ResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class KiiUserAPI<T extends KiiUser> implements UserAPI<T> {
+class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
 
     private final KiiAppAPI api;
     private final KiiUserFactory<T> mFactory;
