@@ -18,7 +18,7 @@ import jp.fkmsoft.libs.kiilib.entities.KiiUserFactory;
 /**
  * Factory for Test
  */
-public class TestEntityFactory implements EntityFactory<KiiUser, KiiGroup<KiiUser>, KiiBucket, KiiObject<KiiBucket>, KiiTopic> {
+public class TestEntityFactory implements EntityFactory<KiiUser, KiiGroup, KiiBucket, KiiObject, KiiTopic> {
     @Override
     public KiiUserFactory<KiiUser> getKiiUserFactory() {
         return new KiiUserFactory<KiiUser>() {
@@ -30,22 +30,22 @@ public class TestEntityFactory implements EntityFactory<KiiUser, KiiGroup<KiiUse
     }
 
     @Override
-    public KiiGroupFactory<KiiUser, KiiGroup<KiiUser>> getKiiGroupFactory() {
-        return new KiiGroupFactory<KiiUser, KiiGroup<KiiUser>>() {
+    public KiiGroupFactory<KiiUser, KiiGroup> getKiiGroupFactory() {
+        return new KiiGroupFactory<KiiUser, KiiGroup>() {
             @Override
-            public KiiGroup<KiiUser> create(String id, String name, KiiUser owner) {
-                return new KiiGroup<KiiUser>(id, name, owner);
+            public KiiGroup create(String id, String name, KiiUser owner) {
+                return new KiiGroup(id, name, owner);
             }
         };
     }
 
     @Override
-    public KiiObjectFactory<KiiBucket, KiiObject<KiiBucket>> getKiiObjectFactory() {
-        return new KiiObjectFactory<KiiBucket, KiiObject<KiiBucket>>() {
+    public KiiObjectFactory<KiiBucket, KiiObject> getKiiObjectFactory() {
+        return new KiiObjectFactory<KiiBucket, KiiObject>() {
             @Override
-            public KiiObject<KiiBucket> create(KiiBucket bucket, JSONObject body) {
+            public KiiObject create(KiiBucket bucket, JSONObject body) {
                 try {
-                    return new KiiObject<KiiBucket>(bucket, body);
+                    return new KiiObject(bucket, body);
                 } catch (JSONException e) {
                     return null;
                 }

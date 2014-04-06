@@ -12,7 +12,7 @@ import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient;
 /**
  * Implementation for test
  */
-public class TestKiiAppApi extends KiiAppAPI<KiiUser, KiiGroup<KiiUser>, KiiBucket, KiiObject<KiiBucket>, KiiTopic> {
+public class TestKiiAppApi extends KiiAppAPI<KiiUser, KiiGroup, KiiBucket, KiiObject, KiiTopic> {
 
     private MockHttpClient mClient = new MockHttpClient();
 
@@ -26,7 +26,7 @@ public class TestKiiAppApi extends KiiAppAPI<KiiUser, KiiGroup<KiiUser>, KiiBuck
     }
 
     @Override
-    protected EntityFactory<KiiUser, KiiGroup<KiiUser>, KiiBucket, KiiObject<KiiBucket>, KiiTopic> getEntityFactory() {
+    protected EntityFactory<KiiUser, KiiGroup, KiiBucket, KiiObject, KiiTopic> getEntityFactory() {
         return new TestEntityFactory();
     }
 }
