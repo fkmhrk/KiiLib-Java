@@ -10,9 +10,9 @@ public class KiiBaseBucket implements AccessControllable {
     private final BucketOwnable owner;
     private final String name;
     
-    private static BucketOwnable APP_SCOPE = new KiiApp();
+    private final static BucketOwnable APP_SCOPE = new KiiApp();
     
-    public KiiBaseBucket(BucketOwnable owner, String name) {
+    protected KiiBaseBucket(BucketOwnable owner, String name) {
         if (owner == null) {
             owner = APP_SCOPE;
         }

@@ -15,12 +15,12 @@ public class KiiBaseUser extends JSONObject implements BucketOwnable, ACLSubject
     
     private final String id;
     
-    public KiiBaseUser(String id) {
+    protected KiiBaseUser(String id) {
         super();
         this.id = id;
     }
     
-    private KiiBaseUser(String id, String jsonString) throws JSONException {
+    protected KiiBaseUser(String id, String jsonString) throws JSONException {
         super(jsonString);
         this.id = id;
     }

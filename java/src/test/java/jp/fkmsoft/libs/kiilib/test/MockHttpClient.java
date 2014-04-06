@@ -15,9 +15,9 @@ import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient;
  */
 public class MockHttpClient implements KiiHTTPClient {
 
-    public Queue<MockResponse> mSendJsonQueue = new LinkedList<MockResponse>();
-    public Queue<MockResponse> mSendPlainQueue = new LinkedList<MockResponse>();
-    public Queue<MockResponse> mSendStreamQueue = new LinkedList<MockResponse>();
+    public final Queue<MockResponse> mSendJsonQueue = new LinkedList<MockResponse>();
+    public final Queue<MockResponse> mSendPlainQueue = new LinkedList<MockResponse>();
+    public final Queue<MockResponse> mSendStreamQueue = new LinkedList<MockResponse>();
 
     @Override
     public void sendJsonRequest(int method, String url, String token, String contentType, Map<String, String> headers, JSONObject body, ResponseHandler handler) {

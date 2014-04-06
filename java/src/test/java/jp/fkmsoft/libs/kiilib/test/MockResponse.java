@@ -6,9 +6,9 @@ import org.json.JSONObject;
  * Mock Response
  */
 public class MockResponse {
-    public int mStatus;
-    public JSONObject mBody;
-    public String mEtag;
+    public final int mStatus;
+    public final JSONObject mBody;
+    public final String mEtag;
 
     public MockResponse(int mStatus, JSONObject mBody, String mEtag) {
         this.mStatus = mStatus;

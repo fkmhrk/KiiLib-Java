@@ -14,11 +14,11 @@ public class KiiBaseGroup<USER extends KiiBaseUser> implements BucketOwnable, Ac
     private final USER owner;
     private final List<USER> members;
     
-    public KiiBaseGroup(String id) {
+    protected KiiBaseGroup(String id) {
         this(id, null, null);
     }
     
-    public KiiBaseGroup(String id, String name, USER owner) {
+    protected KiiBaseGroup(String id, String name, USER owner) {
         this.id = id;
         this.name = name;
         this.owner = owner;

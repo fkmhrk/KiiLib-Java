@@ -20,19 +20,19 @@ public class KiiBaseObject<BUCKET extends KiiBaseBucket> extends JSONObject impl
     private String id;
     private String version;
     
-    public KiiBaseObject(BUCKET bucket) {
+    protected KiiBaseObject(BUCKET bucket) {
         this.bucket = bucket;
         id = "";
         version = "";
     }
     
-    public KiiBaseObject(BUCKET bucket, String id) {
+    protected KiiBaseObject(BUCKET bucket, String id) {
         this.bucket = bucket;
         this.id = id;
         version = "";
     }
     
-    public KiiBaseObject(BUCKET bucket, JSONObject from) throws JSONException {
+    protected KiiBaseObject(BUCKET bucket, JSONObject from) throws JSONException {
         this.bucket = bucket;
         replace(from);
         id = from.optString(FIELD_ID, null);

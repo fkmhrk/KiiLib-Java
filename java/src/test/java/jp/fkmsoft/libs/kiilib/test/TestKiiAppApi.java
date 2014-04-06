@@ -14,7 +14,7 @@ import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient;
  */
 public class TestKiiAppApi extends KiiAppAPI<KiiUser, KiiGroup, KiiBucket, KiiObject, KiiTopic> {
 
-    private MockHttpClient mClient = new MockHttpClient();
+    private final MockHttpClient mClient = new MockHttpClient();
 
     public TestKiiAppApi(String appId, String appKey, String baseUrl) {
         super(appId, appKey, baseUrl);

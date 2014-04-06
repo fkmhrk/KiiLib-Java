@@ -8,7 +8,7 @@ import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.ResponseHandler;
 
 abstract class KiiResponseHandler<T extends KiiCallback> implements ResponseHandler {
 
-    private T callback;
+    private final T callback;
     
     KiiResponseHandler(T callback) {
         this.callback = callback;

@@ -47,9 +47,9 @@ public abstract class KiiAppAPI<
     private final TopicAPI<TOPIC> topicAPI;
     private final ACLAPI aclAPI;
 
-    private KiiUserFactory<USER> mUserFactory;
+    private final KiiUserFactory<USER> mUserFactory;
     
-    public KiiAppAPI(String appId, String appKey, String baseUrl) {
+    protected KiiAppAPI(String appId, String appKey, String baseUrl) {
         this.appId = appId;
         this.appKey = appKey;
         this.baseUrl = baseUrl;

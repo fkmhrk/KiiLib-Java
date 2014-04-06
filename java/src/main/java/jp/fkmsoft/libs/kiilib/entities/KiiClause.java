@@ -116,7 +116,7 @@ public class KiiClause {
     private static final String TYPE_RANGE = "range";
     
 
-    private JSONObject json = new JSONObject();
+    private final JSONObject json = new JSONObject();
     
     private KiiClause(String type) {
         try {
