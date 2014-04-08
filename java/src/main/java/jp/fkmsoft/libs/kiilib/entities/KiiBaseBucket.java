@@ -27,5 +27,9 @@ public class KiiBaseBucket implements AccessControllable {
     public String getName() {
         return name;
     }
+
+    public BucketOwnable getOwner() {
+        return owner;
+    }
     
 }
