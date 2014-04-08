@@ -64,7 +64,7 @@ public class KiiBaseObject<BUCKET extends KiiBaseBucket> extends JSONObject impl
         }
     }
     
-    public KiiBaseBucket getBucket() {
+    public BUCKET getBucket() {
         return bucket;
     }
 
