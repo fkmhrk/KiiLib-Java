@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     provided 'org.json:json:20090211'
+    //compile 'org.json:json:20090211'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.11'
 
@@ -26,7 +27,7 @@ dependencies {
 uploadArchives {
     repositories.mavenDeployer {
         repository url: "file://$System.env.HOME/.m2/repository"
-        pom.version = '2.0.1'
+        pom.version = '2.1.0'
         pom.groupId = 'jp.fkmsoft.libs'
         pom.artifactId = 'KiiLib-Java'
     }

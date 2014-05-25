@@ -11,7 +11,9 @@ public interface UserAPI<T extends KiiBaseUser> {
     public interface UserCallback<U extends KiiBaseUser> extends KiiCallback {
         void onSuccess(U user);
     }
-    
+
+    void getById(String id, UserCallback<T> callback);
+
     void findUserByUsername(String username, UserCallback<T> callback);
     
     void findUserByEmail(String email, UserCallback<T> callback);
