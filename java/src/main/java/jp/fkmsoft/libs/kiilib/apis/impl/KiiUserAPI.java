@@ -21,6 +21,12 @@ class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
     }
     
     @Override
+    public void getById(String id, UserCallback<T> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + "/users/" + id;
+        getUser(url, callback);
+    }
+
+    @Override
     public void findUserByUsername(String username, UserCallback<T> callback) {
         findUser("LOGIN_NAME:" + username, callback);
     }
@@ -35,12 +41,15 @@ class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
         findUser("PHONE:" + phone, callback);
     }
     
-    private void findUser(String identifier, final UserCallback<T> callback) {
+    private void findUser(String identifier, UserCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + "/users/" + identifier;
-        
-        api.getHttpClient().sendJsonRequest(Method.GET, url, api.accessToken, 
+        getUser(url, callback);
+    }
+
+    private void getUser(String url, final UserCallback<T> callback) {
+        api.getHttpClient().sendJsonRequest(Method.GET, url, api.accessToken,
                 null, null, null, new KiiResponseHandler<UserCallback<T>>(callback) {
-            
+
             @Override
             protected void onSuccess(JSONObject response, String etag, UserCallback<T> callback) {
                 try {

@@ -150,4 +150,25 @@ public class TestUserApi {
             }
         });
     }
+
+    @Test
+    public void test_0700_getById() {
+        mClient.addToSendJson(200, "{\"userID\":\"user2345\",\"loginName\":\"fkm\"}", "");
+
+        String id = "user2345";
+
+        mAppApi.userAPI().getById(id, new UserAPI.UserCallback<KiiUser>() {
+            @Override
+            public void onSuccess(KiiUser user) {
+                Assert.assertNotNull(user);
+                Assert.assertEquals("user2345", user.getId());
+                Assert.assertEquals("fkm", user.getUserName());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Assert.fail(e.getMessage());
+            }
+        });
+    }
 }
