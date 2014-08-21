@@ -167,4 +167,25 @@ class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
             }
         });
     }
+
+    @Override
+    public void uninstallDevice(String regId, final UserCallback<T> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + "/installations/ANDROID:" + regId;
+        api.getHttpClient().sendJsonRequest(Method.DELETE, url, api.accessToken,
+                null, null, null, new ResponseHandler() {
+            @Override
+            public void onResponse(int status, JSONObject response, String etag) {
+                if (status == 204) {
+                    callback.onSuccess(null);
+                } else {
+                    callback.onError(new KiiException(status, response));
+                }
+            }
+
+            @Override
+            public void onException(Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
 }
