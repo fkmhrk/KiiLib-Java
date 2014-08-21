@@ -25,4 +25,6 @@ public interface UserAPI<T extends KiiBaseUser> {
     void updatePhone(T user, String newPhone, boolean verified, UserCallback<T> callback);
     
     void installDevice(String regId, UserCallback<T> callback);
+
+    void uninstallDevice(String regId, UserCallback<T> callback);
 }
