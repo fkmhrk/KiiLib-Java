@@ -158,6 +158,40 @@ class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
     }
 
     @Override
+    public void changePassword(T user, String currentPassword, String newPassword, final UserCallback<T> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + user.getResourcePath() + "/password";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("oldPassword", currentPassword);
+            json.put("newPassword", newPassword);
+        } catch (JSONException e) {
+            callback.onError(e);
+            return;
+        }
+
+        api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken,
+                "application/vnd.kii.ChangePasswordRequest+json", null, json, new ResponseHandler() {
+            @Override
+            public void onResponse(int status, JSONObject response, String etag) {
+                if (status < 300) {
+                    success(response);
+                } else {
+                    callback.onError(new KiiException(status, response));
+                }
+            }
+
+            private void success(JSONObject response) {
+                callback.onSuccess(null);
+            }
+
+            @Override
+            public void onException(Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
+
+    @Override
     public void installDevice(String regId, final UserCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + "/installations";
         JSONObject json = new JSONObject();
