@@ -10,6 +10,8 @@ import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.ResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.Override;
+
 class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
 
     private final KiiAppAPI api;
@@ -124,6 +126,27 @@ class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
                     callback.onSuccess(user);
                 } catch (JSONException e) {
                     callback.onError(e);
+                }
+            }
+
+            @Override
+            public void onException(Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
+
+    @Override
+    public void resetPassword(String email, final UserCallback<T> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + "/users/EMAIL:" + email +
+                "/password/request-reset";
+        api.getHttpClient().sendPlainTextRequest(Method.POST, url, api.accessToken, null, "", new ResponseHandler() {
+            @Override
+            public void onResponse(int status, JSONObject response, String etag) {
+                if (status < 300) {
+                    callback.onSuccess(null);
+                } else {
+                    callback.onError(new KiiException(status, response));
                 }
             }
 
