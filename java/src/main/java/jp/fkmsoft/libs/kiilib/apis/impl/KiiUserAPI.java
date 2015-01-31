@@ -169,7 +169,7 @@ class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
             return;
         }
 
-        api.getHttpClient().sendJsonRequest(Method.POST, url, api.accessToken,
+        api.getHttpClient().sendJsonRequest(Method.PUT, url, api.accessToken,
                 "application/vnd.kii.ChangePasswordRequest+json", null, json, new ResponseHandler() {
             @Override
             public void onResponse(int status, JSONObject response, String etag) {
