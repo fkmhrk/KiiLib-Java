@@ -16,8 +16,10 @@ public interface TopicAPI<TOPIC extends KiiBaseTopic> {
         void onSuccess(T topic);
     }
     void create(BucketOwnable owner, String name, TopicCallback<TOPIC> callback);
-    
+
     void subscribe(TOPIC topic, TopicCallback<TOPIC> callback);
+
+    void unsubscribe(TOPIC topic, String userId, TopicCallback<TOPIC> callback);
     
     public interface SendMessageCallback extends KiiCallback {
         void onSuccess(String pushMessageId);
