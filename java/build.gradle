@@ -27,7 +27,7 @@ dependencies {
 uploadArchives {
     repositories.mavenDeployer {
         repository url: "file://$System.env.HOME/.m2/repository"
-        pom.version = '2.1.0'
+        pom.version = '2.3.0'
         pom.groupId = 'jp.fkmsoft.libs'
         pom.artifactId = 'KiiLib-Java'
     }
