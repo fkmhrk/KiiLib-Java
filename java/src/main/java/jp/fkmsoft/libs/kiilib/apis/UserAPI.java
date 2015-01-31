@@ -25,6 +25,8 @@ public interface UserAPI<T extends KiiBaseUser> {
     void updatePhone(T user, String newPhone, boolean verified, UserCallback<T> callback);
 
     void resetPassword(String email, UserCallback<T> callback);
+
+    void changePassword(T user, String currentPassword, String newPassword, UserCallback<T> callback);
     
     void installDevice(String regId, UserCallback<T> callback);
 
