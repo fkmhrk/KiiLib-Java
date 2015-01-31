@@ -49,6 +49,18 @@ class KiiTopicAPI<TOPIC extends KiiBaseTopic> implements TopicAPI<TOPIC> {
             }
         });
     }
+
+    @Override
+    public void unsubscribe(final TOPIC topic, String userId, TopicCallback<TOPIC> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + topic.getResourcePath() + "/push/subscriptions/users/" + userId;
+
+        api.getHttpClient().sendJsonRequest(Method.DELETE, url, api.accessToken, null, null, null, new KiiResponseHandler<TopicCallback<TOPIC>>(callback) {
+            @Override
+            protected void onSuccess(JSONObject response, String etag, TopicCallback<TOPIC> callback) {
+                callback.onSuccess(topic);
+            }
+        });
+    }
     
     @Override
     public void getList(final BucketOwnable owner, final TopicListCallback<TOPIC> callback) {

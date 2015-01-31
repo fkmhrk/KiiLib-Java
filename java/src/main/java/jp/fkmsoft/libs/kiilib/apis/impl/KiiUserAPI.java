@@ -10,6 +10,8 @@ import jp.fkmsoft.libs.kiilib.http.KiiHTTPClient.ResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.Override;
+
 class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
 
     private final KiiAppAPI api;
@@ -135,6 +137,61 @@ class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
     }
 
     @Override
+    public void resetPassword(String email, final UserCallback<T> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + "/users/EMAIL:" + email +
+                "/password/request-reset";
+        api.getHttpClient().sendPlainTextRequest(Method.POST, url, api.accessToken, null, "", new ResponseHandler() {
+            @Override
+            public void onResponse(int status, JSONObject response, String etag) {
+                if (status < 300) {
+                    callback.onSuccess(null);
+                } else {
+                    callback.onError(new KiiException(status, response));
+                }
+            }
+
+            @Override
+            public void onException(Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
+
+    @Override
+    public void changePassword(T user, String currentPassword, String newPassword, final UserCallback<T> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + user.getResourcePath() + "/password";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("oldPassword", currentPassword);
+            json.put("newPassword", newPassword);
+        } catch (JSONException e) {
+            callback.onError(e);
+            return;
+        }
+
+        api.getHttpClient().sendJsonRequest(Method.PUT, url, api.accessToken,
+                "application/vnd.kii.ChangePasswordRequest+json", null, json, new ResponseHandler() {
+            @Override
+            public void onResponse(int status, JSONObject response, String etag) {
+                if (status < 300) {
+                    success(response);
+                } else {
+                    callback.onError(new KiiException(status, response));
+                }
+            }
+
+            private void success(JSONObject response) {
+                callback.onSuccess(null);
+            }
+
+            @Override
+            public void onException(Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
+
+    @Override
     public void installDevice(String regId, final UserCallback<T> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + "/installations";
         JSONObject json = new JSONObject();
@@ -159,6 +216,27 @@ class KiiUserAPI<T extends KiiBaseUser> implements UserAPI<T> {
             
             private void success(JSONObject response) {
                 callback.onSuccess(null);
+            }
+
+            @Override
+            public void onException(Exception e) {
+                callback.onError(e);
+            }
+        });
+    }
+
+    @Override
+    public void uninstallDevice(String regId, final UserCallback<T> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + "/installations/ANDROID:" + regId;
+        api.getHttpClient().sendJsonRequest(Method.DELETE, url, api.accessToken,
+                null, null, null, new ResponseHandler() {
+            @Override
+            public void onResponse(int status, JSONObject response, String etag) {
+                if (status == 204) {
+                    callback.onSuccess(null);
+                } else {
+                    callback.onError(new KiiException(status, response));
+                }
             }
 
             @Override
