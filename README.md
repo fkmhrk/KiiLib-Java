@@ -1,7 +1,7 @@
 KiiLib-Java
 ===========
 
-Kii Cloud Library for Java. This library just provides APIs for your application so please add KiiLib-Java-HTTPClient(for native Java application such as Swing. coming soon) / KiiLib-Android-Volley (for Android application with Volely. coming soon)
+Kii Cloud Library for Java. This library just provides APIs for your application so please add KiiLib-Java-HTTPClient(for native Java application such as Swing. coming soon) / KiiLib-Android-Volley (for Android application with Volley. coming soon)
 
 How to install on your local maven repository
 ============
