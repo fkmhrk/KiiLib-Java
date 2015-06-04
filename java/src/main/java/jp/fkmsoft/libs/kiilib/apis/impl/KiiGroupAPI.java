@@ -143,7 +143,20 @@ class KiiGroupAPI<USER extends KiiBaseUser, GROUP extends KiiBaseGroup<USER>> im
             }
         });
     }
-    
+
+    @Override
+    public void removeMember(final GROUP group, final USER user, final GroupCallback<GROUP> callback) {
+        String url = api.baseUrl + "/apps/" + api.appId + group.getResourcePath() + "/members/" + user.getId();
+
+        api.getHttpClient().sendJsonRequest(Method.DELETE, url, api.accessToken, "", null, null, new KiiResponseHandler<GroupCallback<GROUP>>(callback) {
+            @Override
+            protected void onSuccess(JSONObject response, String etag, GroupCallback<GROUP> callback) {
+                group.getMembers().remove(user);
+                callback.onSuccess(group);
+            }
+        });
+    }
+
     @Override
     public void changeName(final GROUP group, final String name, final GroupCallback<GROUP> callback) {
         String url = api.baseUrl + "/apps/" + api.appId + group.getResourcePath() + "/name";
