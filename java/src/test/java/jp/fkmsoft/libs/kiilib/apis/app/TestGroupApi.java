@@ -162,7 +162,36 @@ public class TestGroupApi {
     }
 
     @Test
-    public void test_0500_changeName() {
+    public void test_0500_removeMember() {
+        mClient.addToSendJson(200, "{\"members\":[" +
+                "{\"userID\":\"user1234\"},{\"userID\":\"user2345\"}" +
+                "]}", "");
+
+        KiiGroup group = new KiiGroup("group2345");
+
+        KiiUser user = new KiiUser("user2345");
+        mAppApi.groupAPI().removeMember(group, user, new GroupAPI.GroupCallback<KiiGroup>() {
+            @Override
+            public void onSuccess(KiiGroup group) {
+                Assert.assertNotNull(group);
+
+                List<KiiUser> members = group.getMembers();
+                Assert.assertNotNull(members);
+                Assert.assertEquals(1, members.size());
+
+                KiiUser user = members.get(0);
+                Assert.assertEquals("user1234", user.getId());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Assert.fail(e.getMessage());
+            }
+        });
+    }
+
+    @Test
+    public void test_0600_changeName() {
         mClient.addToSendPlain(200, "{}", "");
 
         KiiGroup group = new KiiGroup("group2345");
