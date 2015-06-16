@@ -163,9 +163,7 @@ public class TestGroupApi {
 
     @Test
     public void test_0500_removeMember() {
-        mClient.addToSendJson(200, "{\"members\":[" +
-                "{\"userID\":\"user1234\"},{\"userID\":\"user2345\"}" +
-                "]}", "");
+        mClient.addToSendJson(204, null, "");
 
         KiiGroup group = new KiiGroup("group2345");
 
@@ -174,13 +172,6 @@ public class TestGroupApi {
             @Override
             public void onSuccess(KiiGroup group) {
                 Assert.assertNotNull(group);
-
-                List<KiiUser> members = group.getMembers();
-                Assert.assertNotNull(members);
-                Assert.assertEquals(1, members.size());
-
-                KiiUser user = members.get(0);
-                Assert.assertEquals("user1234", user.getId());
             }
 
             @Override
