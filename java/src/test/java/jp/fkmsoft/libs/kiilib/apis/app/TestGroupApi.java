@@ -168,10 +168,14 @@ public class TestGroupApi {
         KiiGroup group = new KiiGroup("group2345");
 
         KiiUser user = new KiiUser("user2345");
+        group.getMembers().add(user);
         mAppApi.groupAPI().removeMember(group, user, new GroupAPI.GroupCallback<KiiGroup>() {
             @Override
             public void onSuccess(KiiGroup group) {
                 Assert.assertNotNull(group);
+                List<KiiUser> members = group.getMembers();
+                Assert.assertNotNull(members);
+                Assert.assertEquals(0, members.size());
             }
 
             @Override
