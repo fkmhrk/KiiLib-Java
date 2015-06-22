@@ -31,6 +31,8 @@ public interface GroupAPI<USER extends KiiBaseUser, GROUP extends KiiBaseGroup> 
     void getMembers(GROUP group, MemberCallback<USER> callback);
     
     void addMember(GROUP group, USER user, GroupCallback<GROUP> callback);
+
+    void removeMember(GROUP group, USER user, GroupCallback<GROUP> callback);
     
     void changeName(GROUP group, String name, GroupCallback<GROUP> callback);
 }
