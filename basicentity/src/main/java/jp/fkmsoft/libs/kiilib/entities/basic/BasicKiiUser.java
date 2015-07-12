@@ -17,13 +17,15 @@ public class BasicKiiUser extends JSONObject implements KiiUser {
 
     public BasicKiiUser(String id, JSONObject data) {
         mId = id;
-        Iterator keys = data.keys();
-        while (keys.hasNext()){
-            String key = (String) keys.next();
-            try {
-                put(key, data.opt(key));
-            } catch (JSONException e) {
-                // nop
+        if (data != null) {
+            Iterator keys = data.keys();
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                try {
+                    put(key, data.opt(key));
+                } catch (JSONException e) {
+                    // nop
+                }
             }
         }
     }
