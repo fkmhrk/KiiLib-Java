@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    jcenter()
+    maven {
+        url "../m2repository"
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'jp.fkmsoft.libs:KiiLib-Java-Core:3.0.0'
+    compile 'org.json:json:20090211'
+    testCompile 'junit:junit:4.11'
+    testCompile 'jp.fkmsoft.libs:KiiLib-Java-TestTools:3.0.0'
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository url: "file://$System.env.HOME/.m2/repository"
+        pom.version = '3.0.0'
+        pom.groupId = 'jp.fkmsoft.libs'
+        pom.artifactId = 'KiiLib-Java-UserAPI'
+    }
+}
