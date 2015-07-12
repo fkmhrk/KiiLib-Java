@@ -9,8 +9,8 @@ import jp.fkmsoft.libs.kiilib.apis.KiiException;
 import jp.fkmsoft.libs.kiilib.apis.SignupInfo;
 import jp.fkmsoft.libs.kiilib.client.KiiHTTPClient;
 import jp.fkmsoft.libs.kiilib.entities.KiiContext;
-import jp.fkmsoft.libs.kiilib.entities.TestKiiUser;
-import jp.fkmsoft.libs.kiilib.entities.TestUserDTO;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiUser;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiUserDTO;
 import jp.fkmsoft.libs.kiilib.entities.test.TestKiiContext;
 
 /**
@@ -27,10 +27,10 @@ public class KiiAppAPITest {
 
         String username = "fkmtest";
         String password = "123456";
-        api.loginAsUser(username, password, new TestUserDTO(), new AppAPI.LoginCallback<TestKiiUser>() {
+        api.loginAsUser(username, password, BasicKiiUserDTO.getInstance(), new AppAPI.LoginCallback<BasicKiiUser>() {
             @Override
-            public void onSuccess(String token, TestKiiUser user) {
-                Assert.assertEquals("791e70341321-bf39-5e11-0682-02a8afe0", user.getId());
+            public void onSuccess(String token, BasicKiiUser user) {
+                Assert.assertEquals("88eb20051321-fc19-5e11-8682-0fe8323b", user.getId());
             }
 
             @Override
@@ -48,9 +48,9 @@ public class KiiAppAPITest {
         deleteIfExists(api, context);
 
         SignupInfo info = SignupInfo.UserWithUsername("fkmtest2");
-        api.signup(info, "123456", new TestUserDTO(), new AppAPI.SignupCallback<TestKiiUser>() {
+        api.signup(info, "123456", BasicKiiUserDTO.getInstance(), new AppAPI.SignupCallback<BasicKiiUser>() {
             @Override
-            public void onSuccess(TestKiiUser testKiiUser) {
+            public void onSuccess(BasicKiiUser testKiiUser) {
                 Assert.assertNotNull(testKiiUser);
             }
 
@@ -64,9 +64,9 @@ public class KiiAppAPITest {
     private void deleteIfExists(AppAPI api, KiiContext context) {
         String username = "fkmtest2";
         String password = "123456";
-        api.loginAsUser(username, password, new TestUserDTO(), new AppAPI.LoginCallback<TestKiiUser>() {
+        api.loginAsUser(username, password, BasicKiiUserDTO.getInstance(), new AppAPI.LoginCallback<BasicKiiUser>() {
             @Override
-            public void onSuccess(String token, TestKiiUser user) {
+            public void onSuccess(String token, BasicKiiUser user) {
                 System.out.println("user fkmtest2 ID=" + user.getId());
             }
 
