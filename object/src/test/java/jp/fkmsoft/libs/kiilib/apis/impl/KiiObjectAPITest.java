@@ -15,12 +15,12 @@ import jp.fkmsoft.libs.kiilib.entities.KiiBucket;
 import jp.fkmsoft.libs.kiilib.entities.KiiContext;
 import jp.fkmsoft.libs.kiilib.entities.KiiObject;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
-import jp.fkmsoft.libs.kiilib.entities.test.TestKiiBucket;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiBucket;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiObject;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiObjectDTO;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiUser;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiUserDTO;
 import jp.fkmsoft.libs.kiilib.entities.test.TestKiiContext;
-import jp.fkmsoft.libs.kiilib.entities.test.TestKiiObject;
-import jp.fkmsoft.libs.kiilib.entities.test.TestKiiUser;
-import jp.fkmsoft.libs.kiilib.entities.test.TestObjectDTO;
-import jp.fkmsoft.libs.kiilib.entities.test.TestUserDTO;
 
 /**
  * Testcase
@@ -36,7 +36,7 @@ public class KiiObjectAPITest {
         ObjectAPI api = new KiiObjectAPI(context);
 
         KiiUser user = login(context);
-        KiiBucket bucket = new TestKiiBucket(user, BUCKET_NAME);
+        KiiBucket bucket = new BasicKiiBucket(user, BUCKET_NAME);
         JSONObject data = new JSONObject();
         data.put("score", 120);
         data.put("comment", "great!");
@@ -58,9 +58,9 @@ public class KiiObjectAPITest {
         String username = "fkmtest";
         String password = "123456";
         final List<KiiUser> resultList = new ArrayList<KiiUser>();
-        api.loginAsUser(username, password, new TestUserDTO(), new AppAPI.LoginCallback<TestKiiUser>() {
+        api.loginAsUser(username, password, BasicKiiUserDTO.getInstance(), new AppAPI.LoginCallback<BasicKiiUser>() {
             @Override
-            public void onSuccess(String token, TestKiiUser testKiiUser) {
+            public void onSuccess(String token, BasicKiiUser testKiiUser) {
                 resultList.add(testKiiUser);
             }
 
@@ -74,9 +74,9 @@ public class KiiObjectAPITest {
 
     private KiiObject createObject(ObjectAPI api, KiiBucket bucket, JSONObject data) {
         final List<KiiObject> resultList = new ArrayList<KiiObject>();
-        api.create(bucket, data, new TestObjectDTO(), new ObjectAPI.ObjectCallback<TestKiiObject>() {
+        api.create(bucket, data, BasicKiiObjectDTO.getInstance(), new ObjectAPI.ObjectCallback<BasicKiiObject>() {
             @Override
-            public void onSuccess(TestKiiObject testKiiObject) {
+            public void onSuccess(BasicKiiObject testKiiObject) {
                 resultList.add(testKiiObject);
             }
 

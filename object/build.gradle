@@ -16,6 +16,7 @@ dependencies {
     testCompile 'jp.fkmsoft.libs:KiiLib-Java-TestTools:3.0.0'
     testCompile 'jp.fkmsoft.libs:KiiLib-Java-AppAPI:3.0.0'
     testCompile 'jp.fkmsoft.libs:KiiLib-Java-UserAPI:3.0.0'
+    testCompile 'jp.fkmsoft.libs:KiiLib-Java-BasicEntity:3.0.0'
 }
 
 uploadArchives {
