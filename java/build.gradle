@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-    provided 'org.json:json:20090211'
-    //compile 'org.json:json:20090211'
+    //provided 'org.json:json:20090211'
+    compile 'org.json:json:20090211'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.11'
 
