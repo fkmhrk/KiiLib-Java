@@ -12,6 +12,7 @@ import java.util.Map;
 
 import jp.fkmsoft.libs.kiilib.apis.GroupAPI;
 import jp.fkmsoft.libs.kiilib.apis.KiiException;
+import jp.fkmsoft.libs.kiilib.apis.KiiItemCallback;
 import jp.fkmsoft.libs.kiilib.apis.KiiResponseHandler;
 import jp.fkmsoft.libs.kiilib.client.KiiHTTPClient;
 import jp.fkmsoft.libs.kiilib.entities.KiiContext;
@@ -136,7 +137,7 @@ public class KiiGroupAPI implements GroupAPI {
     public void addMember(final KiiGroup group, final KiiUser user, GroupCallback<KiiGroup> callback) {
         String url = mContext.getBaseUrl() + "/apps/" + mContext.getAppId() + group.getResourcePath() + "/members/" + user.getId();
         
-        mContext.getHttpClient().sendJsonRequest(KiiHTTPClient.Method.PUT, url, mContext.getAccessToken(), "", null, null, new KiiResponseHandler<GroupCallback<KiiGroup>>(callback) {
+        mContext.getHttpClient().sendJsonRequest(KiiHTTPClient.Method.PUT, url, mContext.getAccessToken(), null, null, null, new KiiResponseHandler<GroupCallback<KiiGroup>>(callback) {
             @Override
             protected void onSuccess(JSONObject response, String etag, GroupCallback<KiiGroup> callback) {
                 // group.getMembers().add(user);
@@ -149,7 +150,7 @@ public class KiiGroupAPI implements GroupAPI {
     public void removeMember(final KiiGroup group, final KiiUser user, GroupCallback<KiiGroup> callback) {
         String url = mContext.getBaseUrl() + "/apps/" + mContext.getAppId() + group.getResourcePath() + "/members/" + user.getId();
 
-        mContext.getHttpClient().sendJsonRequest(KiiHTTPClient.Method.DELETE, url, mContext.getAccessToken(), "", null, null, new KiiResponseHandler<GroupCallback<KiiGroup>>(callback) {
+        mContext.getHttpClient().sendJsonRequest(KiiHTTPClient.Method.DELETE, url, mContext.getAccessToken(), null, null, null, new KiiResponseHandler<GroupCallback<KiiGroup>>(callback) {
             @Override
             protected void onSuccess(JSONObject response, String etag, GroupCallback<KiiGroup> callback) {
                 // group.getMembers().remove(user);
@@ -166,6 +167,17 @@ public class KiiGroupAPI implements GroupAPI {
             @Override
             protected void onSuccess(JSONObject response, String etag, GroupCallback<KiiGroup> callback) {
                 callback.onSuccess(group);
+            }
+        });
+    }
+
+    @Override
+    public void delete(KiiGroup group, KiiItemCallback<Void> callback) {
+        String url = mContext.getBaseUrl() + "/apps/" + mContext.getAppId() + "/groups/" + group.getId();
+        mContext.getHttpClient().sendJsonRequest(KiiHTTPClient.Method.DELETE, url, mContext.getAccessToken(), null, null, null, new KiiResponseHandler<KiiItemCallback<Void>>(callback) {
+            @Override
+            protected void onSuccess(JSONObject response, String etag, KiiItemCallback<Void> callback) {
+                callback.onSuccess(null);
             }
         });
     }
