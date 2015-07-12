@@ -40,15 +40,21 @@ public class TestHTTPClient implements KiiHTTPClient {
             connection.setRequestMethod(toMethod(method));
             setHeaders(connection, token, contentType, headers);
             if (method == Method.POST || method == Method.PUT) {
-                connection.setDoOutput(true);
-                writeBody(connection, body.toString());
+                if (body != null) {
+                    connection.setDoOutput(true);
+                    writeBody(connection, body.toString());
+                }
             }
 
             int responseCode = connection.getResponseCode();
             String etag = connection.getHeaderField("etag");
             String respBody;
             if (200 <= responseCode && responseCode < 300) {
-                respBody = readStream(connection.getInputStream());
+                if (responseCode == 204) {
+                    respBody = "{}";
+                } else {
+                    respBody = readStream(connection.getInputStream());
+                }
             } else {
                 respBody = readStream(connection.getErrorStream());
             }
