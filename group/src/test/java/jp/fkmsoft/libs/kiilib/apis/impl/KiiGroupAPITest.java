@@ -15,10 +15,10 @@ import jp.fkmsoft.libs.kiilib.apis.UserAPI;
 import jp.fkmsoft.libs.kiilib.entities.KiiContext;
 import jp.fkmsoft.libs.kiilib.entities.KiiGroup;
 import jp.fkmsoft.libs.kiilib.entities.KiiUser;
-import jp.fkmsoft.libs.kiilib.entities.TestGroupDTO;
-import jp.fkmsoft.libs.kiilib.entities.TestKiiGroup;
-import jp.fkmsoft.libs.kiilib.entities.TestKiiUser;
-import jp.fkmsoft.libs.kiilib.entities.TestUserDTO;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiGroup;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiGroupDTO;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiUser;
+import jp.fkmsoft.libs.kiilib.entities.basic.BasicKiiUserDTO;
 import jp.fkmsoft.libs.kiilib.entities.test.TestKiiContext;
 
 /**
@@ -56,9 +56,9 @@ public class KiiGroupAPITest {
 
         SignupInfo info = SignupInfo.UserWithUsername(username);
         final List<KiiUser> resultList = new ArrayList<KiiUser>();
-        api.signup(info, "123456", new TestUserDTO(), new AppAPI.SignupCallback<TestKiiUser>() {
+        api.signup(info, "123456", BasicKiiUserDTO.getInstance(), new AppAPI.SignupCallback<BasicKiiUser>() {
             @Override
-            public void onSuccess(TestKiiUser testKiiUser) {
+            public void onSuccess(BasicKiiUser testKiiUser) {
                 resultList.add(testKiiUser);
             }
 
@@ -68,9 +68,9 @@ public class KiiGroupAPITest {
                     Assert.fail("Failed to create user status=" + e.getStatus());
                 }
                 UserAPI userAPI = new KiiUserAPI(context);
-                userAPI.findUserByUsername(username, new TestUserDTO(), new UserAPI.UserCallback<TestKiiUser>() {
+                userAPI.findUserByUsername(username, BasicKiiUserDTO.getInstance(), new UserAPI.UserCallback<BasicKiiUser>() {
                     @Override
-                    public void onSuccess(TestKiiUser testKiiUser) {
+                    public void onSuccess(BasicKiiUser testKiiUser) {
                         resultList.add(testKiiUser);
                     }
 
@@ -91,9 +91,9 @@ public class KiiGroupAPITest {
         String username = "fkmtest";
         String password = "123456";
         final List<KiiUser> resultList = new ArrayList<KiiUser>();
-        api.loginAsUser(username, password, new TestUserDTO(), new AppAPI.LoginCallback<TestKiiUser>() {
+        api.loginAsUser(username, password, BasicKiiUserDTO.getInstance(), new AppAPI.LoginCallback<BasicKiiUser>() {
             @Override
-            public void onSuccess(String token, TestKiiUser testKiiUser) {
+            public void onSuccess(String token, BasicKiiUser testKiiUser) {
                 resultList.add(testKiiUser);
             }
 
@@ -108,9 +108,9 @@ public class KiiGroupAPITest {
     private KiiGroup createGroup(GroupAPI api, KiiUser currentUser) {
         String groupName = "group1111";
         final List<KiiGroup> resultList = new ArrayList<KiiGroup>();
-        api.create(groupName, currentUser, null, new TestGroupDTO(), new GroupAPI.GroupCallback<TestKiiGroup>() {
+        api.create(groupName, currentUser, null, BasicKiiGroupDTO.getInstance(), new GroupAPI.GroupCallback<BasicKiiGroup>() {
             @Override
-            public void onSuccess(TestKiiGroup g) {
+            public void onSuccess(BasicKiiGroup g) {
                 resultList.add(g);
             }
 
@@ -137,9 +137,9 @@ public class KiiGroupAPITest {
     }
 
     private void getMembers(GroupAPI api, KiiGroup group, final int expectedCount) {
-        api.getMembers(group, new TestUserDTO(), new GroupAPI.MemberCallback<TestKiiUser>() {
+        api.getMembers(group, BasicKiiUserDTO.getInstance(), new GroupAPI.MemberCallback<BasicKiiUser>() {
             @Override
-            public void onSuccess(List<TestKiiUser> testKiiUsers) {
+            public void onSuccess(List<BasicKiiUser> testKiiUsers) {
                 Assert.assertEquals(expectedCount, testKiiUsers.size());
             }
 
