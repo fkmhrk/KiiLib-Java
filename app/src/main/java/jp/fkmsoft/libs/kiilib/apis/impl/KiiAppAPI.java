@@ -20,7 +20,7 @@ public class KiiAppAPI implements AppAPI {
 
     private final KiiContext mContext;
 
-    protected KiiAppAPI(KiiContext context) {
+    public KiiAppAPI(KiiContext context) {
         mContext = context;
     }
 
@@ -83,8 +83,11 @@ public class KiiAppAPI implements AppAPI {
             protected void onSuccess(JSONObject response, String etag, LoginCallback<T> callback) {
                 try {
                     String token = response.getString("access_token");
-                    // String userId = response.getString("id");
+                    String userId = response.getString("id");
                     mContext.setAccessToken(token);
+
+                    response.remove("access_token");
+                    response.put("UserID", userId);
                     callback.onSuccess(token, dto.fromJson(response));
                 } catch (JSONException e) {
                     callback.onError(new KiiException(599, e));

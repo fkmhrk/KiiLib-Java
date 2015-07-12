@@ -6,6 +6,8 @@ import jp.fkmsoft.libs.kiilib.client.KiiHTTPClient;
  * Describes context in Kii Clound
  */
 public interface KiiContext {
+    String SITE_US = "https://api.kii.com/api";
+    String SITE_JP = "https://api-jp.kii.com/api";
     /**
      * Gets App ID.
      * @return App ID

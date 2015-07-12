@@ -11,4 +11,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'jp.fkmsoft.libs:KiiLib-Java-Core:3.0.0'
     compile 'org.json:json:20090211'
+    testCompile 'junit:junit:4.11'
+    testCompile 'jp.fkmsoft.libs:KiiLib-Java-TestTools:3.0.0'
 }

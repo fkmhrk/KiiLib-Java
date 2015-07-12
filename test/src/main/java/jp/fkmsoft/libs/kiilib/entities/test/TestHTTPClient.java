@@ -31,6 +31,8 @@ public class TestHTTPClient implements KiiHTTPClient {
 
     @Override
     public void sendJsonRequest(int method, String urlString, String token, String contentType, Map<String, String> headers, JSONObject body, ResponseHandler responseHandler) {
+        System.out.println(toMethod(method) + " " + urlString);
+        System.out.println("token=" + token);
         HttpURLConnection connection;
         try {
             URL url = new URL(urlString);
