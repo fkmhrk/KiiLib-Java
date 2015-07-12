@@ -12,11 +12,4 @@ public interface KiiDTO<T> {
      * @return An instance of T
      */
     T fromJson(JSONObject input);
-
-    /**
-     * Creates JSONObject by T
-     * @param input T
-     * @return JSONObject
-     */
-    JSONObject toJson(T input);
 }
