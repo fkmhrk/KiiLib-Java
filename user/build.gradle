@@ -14,6 +14,8 @@ dependencies {
     compile 'org.json:json:20090211'
     testCompile 'junit:junit:4.11'
     testCompile 'jp.fkmsoft.libs:KiiLib-Java-TestTools:3.0.0'
+    testCompile 'jp.fkmsoft.libs:KiiLib-Java-AppAPI:3.0.0'
+    testCompile 'jp.fkmsoft.libs:KiiLib-Java-BasicEntity:3.0.0'
 }
 
 uploadArchives {
