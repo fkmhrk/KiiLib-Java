@@ -73,6 +73,13 @@ public interface GroupAPI {
      */
     void changeName(KiiGroup group, String name, GroupCallback<KiiGroup> callback);
 
+    /**
+     * Deletes target group.
+     * @param group Target group
+     * @param callback Callback object.
+     */
+    void delete(KiiGroup group, KiiItemCallback<Void> callback);
+
     interface GroupCallback<T extends KiiGroup> extends KiiItemCallback<T> { }
 
     interface GroupListCallback<T extends KiiGroup> extends KiiItemCallback<List<T>> { }

@@ -8,6 +8,12 @@
   <dependencies>
     <dependency>
       <groupId>jp.fkmsoft.libs</groupId>
+      <artifactId>KiiLib-Java-AppAPI</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jp.fkmsoft.libs</groupId>
       <artifactId>KiiLib-Java-Core</artifactId>
       <version>3.0.0</version>
       <scope>compile</scope>
@@ -22,6 +28,12 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jp.fkmsoft.libs</groupId>
+      <artifactId>KiiLib-Java-UserAPI</artifactId>
+      <version>3.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
