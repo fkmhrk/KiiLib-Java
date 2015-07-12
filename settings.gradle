@@ -1,1 +1,1 @@
-include ':java', ':core', ':app', ':test', ':user', ':group'
+include ':java', ':core', ':app', ':test', ':user', ':group', ':bucket'
