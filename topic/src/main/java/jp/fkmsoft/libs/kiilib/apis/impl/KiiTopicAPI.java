@@ -28,13 +28,13 @@ public class KiiTopicAPI implements TopicAPI {
     }
 
     @Override
-    public <T extends KiiTopic> void create(final BucketOwnable owner, String name, final KiiTopicDTO<T> dto, TopicCallback<T> callback) {
+    public <T extends KiiTopic> void create(final BucketOwnable owner, final String name, final KiiTopicDTO<T> dto, TopicCallback<T> callback) {
         String url = mContext.getBaseUrl() + "/apps/" + mContext.getAppId() + owner.getResourcePath() + "/topics/" + name;
         
         mContext.getHttpClient().sendJsonRequest(KiiHTTPClient.Method.PUT, url, mContext.getAccessToken(), null, null, null, new KiiResponseHandler<TopicCallback<T>>(callback) {
             @Override
             protected void onSuccess(JSONObject response, String etag, TopicCallback<T> callback) {
-                callback.onSuccess(dto.fromJson(owner, response));
+                callback.onSuccess(dto.fromJson(owner, name));
             }
         });
     }
@@ -85,7 +85,10 @@ public class KiiTopicAPI implements TopicAPI {
                 List<T> list = new ArrayList<T>(array.length());
                 for (int i = 0 ; i < array.length() ; ++i) {
                     JSONObject obj = array.getJSONObject(i);
-                    list.add(dto.fromJson(owner, obj));
+                    String topicName = obj.optString("topicID", null);
+                    if (topicName != null) {
+                        list.add(dto.fromJson(owner, topicName));
+                    }
                 }
                 return list;
             }
