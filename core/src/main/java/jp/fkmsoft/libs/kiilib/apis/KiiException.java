@@ -16,6 +16,12 @@ public class KiiException extends Exception {
         this.mBody = body;
     }
 
+    public KiiException(int status, Throwable cause) {
+        super(cause);
+        this.mStatus = status;
+        this.mBody = null;
+    }
+
     /**
      * Gets the HTTP status code
      * @return HTTP status code

@@ -1,0 +1,14 @@
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+    maven {
+        url "../m2repository"
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'jp.fkmsoft.libs:KiiLib-Java-Core:3.0.0'
+    compile 'org.json:json:20090211'
+}
