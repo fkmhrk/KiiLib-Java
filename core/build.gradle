@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'org.json:json:20090211'
+    testCompile 'junit:junit:4.11'
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        repository url: "file://$System.env.HOME/.m2/repository"
+        pom.version = '3.0.0'
+        pom.groupId = 'jp.fkmsoft.libs'
+        pom.artifactId = 'KiiLib-Java-Core'
+    }
+}
