@@ -16,10 +16,11 @@ repositories {
 
 dependencies {
     compile 'jp.fkmsoft.libs:KiiLib-Java:3.0.0'
+    compile 'jp.fkmsoft.libs:KiiLib-Java-BasicEntity:3.0.0'
 }
 ```
 
-You can pick only APIs you will use. `'jp.fkmsoft.libs:KiiLib-Java:3.0.0'` contains ALL APIs.
+You can pick only APIs you will use. Following is an example of only using AppAPI, BucketAPI and Object API.
 
 ```
 dependencies {
@@ -29,4 +30,5 @@ dependencies {
 }
 ```
 
+`'jp.fkmsoft.libs:KiiLib-Java:3.0.0'` contains ALL APIs.
 
