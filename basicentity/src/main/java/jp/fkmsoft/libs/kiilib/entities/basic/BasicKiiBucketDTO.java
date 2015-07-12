@@ -1,21 +1,24 @@
 package jp.fkmsoft.libs.kiilib.entities.basic;
 
-import org.json.JSONObject;
-
-import jp.fkmsoft.libs.kiilib.entities.KiiDTO;
+import jp.fkmsoft.libs.kiilib.entities.BucketOwnable;
+import jp.fkmsoft.libs.kiilib.entities.KiiBucketDTO;
 
 /**
  * DTO for {@link BasicKiiBucket}
  */
-public class BasicKiiBucketDTO implements KiiDTO<BasicKiiBucket> {
-    @Override
-    public BasicKiiBucket fromJson(JSONObject jsonObject) {
-        // is this method really called?
-        return null;
+public class BasicKiiBucketDTO implements KiiBucketDTO<BasicKiiBucket> {
+
+    private static BasicKiiBucketDTO INSTANCE = new BasicKiiBucketDTO();
+    private BasicKiiBucketDTO() {
+        // singleton
+    }
+
+    public static BasicKiiBucketDTO getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public JSONObject toJson(BasicKiiBucket basicKiiBucket) {
-        return null;
+    public BasicKiiBucket fromJson(BucketOwnable owner, String name) {
+        return new BasicKiiBucket(owner, name);
     }
 }

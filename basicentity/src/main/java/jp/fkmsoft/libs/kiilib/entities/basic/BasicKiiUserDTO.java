@@ -10,14 +10,18 @@ import jp.fkmsoft.libs.kiilib.entities.KiiDTO;
 public class BasicKiiUserDTO implements KiiDTO<BasicKiiUser> {
     private static final String FIELD_ID = "UserID";
 
+    private static BasicKiiUserDTO INSTANCE = new BasicKiiUserDTO();
+    private BasicKiiUserDTO() {
+        // singleton
+    }
+
+    public static BasicKiiUserDTO getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public BasicKiiUser fromJson(JSONObject json) {
         String userId = json.optString(FIELD_ID, "");
         return new BasicKiiUser(userId, json);
-    }
-
-    @Override
-    public JSONObject toJson(BasicKiiUser basicKiiUser) {
-        return null;
     }
 }

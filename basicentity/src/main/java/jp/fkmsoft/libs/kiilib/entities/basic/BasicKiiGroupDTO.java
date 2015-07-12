@@ -13,6 +13,15 @@ public class BasicKiiGroupDTO implements KiiDTO<BasicKiiGroup> {
     private static final String FIELD_NAME = "name";
     private static final String FIELD_OWNER_ID = "owner";
 
+    private static BasicKiiGroupDTO INSTANCE = new BasicKiiGroupDTO();
+    private BasicKiiGroupDTO() {
+        // singleton
+    }
+
+    public static BasicKiiGroupDTO getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public BasicKiiGroup fromJson(JSONObject json) {
         String groupId = json.optString(FIELD_ID, "");
@@ -20,10 +29,5 @@ public class BasicKiiGroupDTO implements KiiDTO<BasicKiiGroup> {
         String ownerId = json.optString(FIELD_OWNER_ID, null);
         KiiUser owner = ownerId == null ? null : new BasicKiiUser(ownerId, null);
         return new BasicKiiGroup(groupId, name, owner);
-    }
-
-    @Override
-    public JSONObject toJson(BasicKiiGroup basicKiiGroup) {
-        return null;
     }
 }

@@ -9,14 +9,18 @@ import jp.fkmsoft.libs.kiilib.entities.KiiTopicDTO;
  * DTO for {@link BasicKiiTopic}
  */
 public class BasicKiiTopicDTO implements KiiTopicDTO<BasicKiiTopic> {
-    @Override
-    public BasicKiiTopic fromJson(BucketOwnable bucketOwnable, JSONObject jsonObject) {
-        // is this method really called?
-        return null;
+
+    private static BasicKiiTopicDTO INSTANCE = new BasicKiiTopicDTO();
+    private BasicKiiTopicDTO() {
+        // singleton
+    }
+
+    public static BasicKiiTopicDTO getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public JSONObject toJson(BasicKiiTopic basicKiiTopic) {
-        return null;
+    public BasicKiiTopic fromJson(BucketOwnable owner, String name) {
+        return new BasicKiiTopic(owner, name);
     }
 }
