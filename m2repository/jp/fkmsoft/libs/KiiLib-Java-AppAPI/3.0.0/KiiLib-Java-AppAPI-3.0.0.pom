@@ -26,6 +26,12 @@
     </dependency>
     <dependency>
       <groupId>jp.fkmsoft.libs</groupId>
+      <artifactId>KiiLib-Java-BasicEntity</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jp.fkmsoft.libs</groupId>
       <artifactId>KiiLib-Java-TestTools</artifactId>
       <version>3.0.0</version>
       <scope>test</scope>
