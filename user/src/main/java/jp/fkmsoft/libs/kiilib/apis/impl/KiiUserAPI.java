@@ -19,7 +19,7 @@ public class KiiUserAPI implements UserAPI {
 
     private final KiiContext mContext;
 
-    KiiUserAPI(KiiContext context) {
+    public KiiUserAPI(KiiContext context) {
         mContext = context;
     }
 
